@@ -1,11 +1,21 @@
 def nomenclatures(parameter):
-    nomen = {"Bg": "gas formation volume factor", "Bo": "oil FVF", "Bw": "water FVF"}
-    units = {"Bg": "RB/scf", "Bo": "RB/STB", "Bw": "RB/STB"}
+    """
+    Dictionary for inputs and outputs, giving the descriptions, and the oilfield units
+    
+    Input:
+    parameter = the input-output parameter, string
+    
+    Output:
+    description = the description of the parameter
+    unit = the oilfield unit of the parameter
+    """
+    description = {"Bg": "gas formation volume factor", "Bo": "oil FVF", "Bw": "water FVF"}
+    unit = {"Bg": "RB/scf", "Bo": "RB/STB", "Bw": "RB/STB"}
 
-    whatis = nomen[parameter]
-    unit = units[parameter]
+    description = description[parameter]
+    unit = unit[parameter]
 
-    return(whatis, unit)
+    return(description, unit)
 
 # testing
 print(nomenclatures("Bg"))
