@@ -1,48 +1,166 @@
+"""
+Material Balance Plots
+@author: Yohanes Nuwara
+@email: ign.nuwara97@gmail.com
+"""
+
+import numpy as np
 import matplotlib.pyplot as plt
 
-class drygas():
-  def plot1(self):
-      plt.plot(Eg, F)
-      plt.show()
-      return(Eg, F)
-  def plot2(self):
-      plt.plot(Gp, p_z)
-      plt.show()
-      return((Gp, p_z))
-  def plot3(self):
-      plt.plot(Gp, F_eg)
-      plt.show()
-      return(Gp, F_eg)
-  def plot6(self):
-      plt.plot(Eg_Bgi_Efw, F)
-      plt.show()
-      return(Eg_Bgi_Efw, F)
-  def plot7(self):
-      plt.plot(Gp, p_z_Efw)
-      plt.show()
-      return(Gp, p_z_Efw)
+
+def condensate_belowdew(Rs, Rv, Rsi, Rvi, Bo, Bg, Bgi, Np, Gp):
+    """
+    Calculate the parameters for material balance plot of gas-condensate reservoirs
+    below dewpoint pressure
+
+    Input:
+    Rs: array
+    Rv: array
+    Rsi: initial Rs, float (NOTE: if data doesn't provide, calculate it with calculate_condensate_params function)
+    Rvi: initial Rv, float (from data Rv)
+    Bo: array
+    Bg: array
+    Np: array
+    Gp: array
+
+    Material balance plots:
+    * Plot 10.1: F vs Eg
+
+    Output:
+    F: array
+    Eg: array
+
+    """
+    Btg = ((Bg * (1 - (Rs * Rvi))) + (Bo * (Rvi - Rv))) / (1 - (Rv * Rs))  # in RB/STB
+    Bto = ((Bo * (1 - (Rv * Rsi))) + (Bg * (Rsi - Rs))) / (1 - (Rv * Rs))  # in RB/scf
+
+    Gi = 0
+    F = (Np * ((Bo - (Rs * Bg)) / (1 - (Rv * Rs)))) + ((Gp - Gi) * ((Bg - (Rv * Bo)) / (1 - (Rv * Rs))))
+    Eg = Btg - Bgi
+    return (F, Eg)
+
+
+def condensate_abovedew(Bg, Bgi, Gp, Gpi):
+    """
+    Calculate the parameters for material balance plot of gas-condensate reservoirs
+    above dewpoint pressure
+
+    Input:
+    Bg: array
+    Bgi: initial Bg, float
+    Gp: array
+    Gpi: initial Gp, float
+
+    Material balance plots:
+    * Plot 10.1: F vs Eg
+
+    Output:
+    F: array
+    Eg: array
+
+    """
+    Eg = Bg - Bgi
+    F = Bg * (Gp - Gpi)
+    return (F, Eg)
+
+class condensate():
+    """
+    Gas Condensate Material Balance Plot
+    """
+
+    def plot1(self, Pdp, p, Rs, Rv, Rvi, Bo, Bg, Bgi, Np, Gp, Gpi, Rsi=None):
+
+        # for above dewpoint pressure
+        id_above = np.where(p > Pdp)[0]
+
+        Bg_above = []; Gp_above = []
+
+        for i in id_above:
+          Bg_above_ = Bg[i]
+          Gp_above_ = Gp[i]
+          Bg_above.append(Bg_above_); Gp_above.append(Gp_above_)
+        
+        F_above, Eg_above = condensate_abovedew(np.array(Bg_above), Bgi, np.array(Gp_above), Gpi)
+
+        # for below dewpoint pressure
+        id_below = np.where(p <= Pdp)[0]
+        if Rsi == None:
+            Rsi = 1 / Rvi
+        else:
+            Rsi = Rsi
+        
+        Rs_below = []; Rv_below = []; Bo_below = []; Bg_below = []
+        Np_below = []; Gp_below = []
+
+        for i in id_below:
+          Rs_below_ = Rs[i]
+          Rv_below_ = Rv[i]
+          Bo_below_ = Bo[i]
+          Bg_below_ = Bg[i]
+          Np_below_ = Np[i]
+          Gp_below_ = Gp[i]
+
+          Rs_below.append(Rs_below_); Rv_below.append(Rv_below_); Bo_below.append(Bo_below_) 
+          Bg_below.append(Bg_below_); Np_below.append(Np_below_); Gp_below.append(Gp_below_)
+        
+        F_below, Eg_below = condensate_belowdew(np.array(Rs_below), np.array(Rv_below), 
+                                                Rsi, Rvi, np.array(Bo_below), np.array(Bg_below), 
+                                                Bgi, np.array(Np_below), np.array(Gp_below))
+
+        # append F and Eg of the below- and above-dewpoint pressure
+        F = np.append(F_above, F_below)
+        Eg = np.append(Eg_above, Eg_below)
+
+        # plot
+        plt.plot(Eg, F, '.')
+        plt.title('Plot 1: F vs Eg')
+        plt.xlabel('Eg (RB/scf)'); plt.ylabel('F (res bbl)')
+        plt.xlim(xmin=0); plt.ylim(ymin=0)
+        plt.show()
+
+        return(F, Eg)
+
+    def plot2(self):
+        plt.plot(Gp, p_z)
+        plt.show()
+        return((Gp, p_z))
+    def plot3(self):
+        plt.plot(Gp, F_eg)
+        plt.show()
+        return(Gp, F_eg)
+    def plot6(self):
+        plt.plot(Eg_Bgi_Efw, F)
+        plt.show()
+        return(Eg_Bgi_Efw, F)
+    def plot7(self):
+        plt.plot(Gp, p_z_Efw)
+        plt.show()
+        return(Gp, p_z_Efw)
 
 class condensategas():
-  def plot1(self):
-      plt.plot(Eg, F)
-      plt.show()
-      return(Eg, F)
-  def plot2(self):
-      plt.plot(Gp, p_z)
-      plt.show()
-      return((Gp, p_z))
-  def plot3(self):
-      plt.plot(Gp, F_eg)
-      plt.show()
-      return(Gp, F_eg)
-  def plot6(self):
-      plt.plot(Eg_Bgi_Efw, F)
-      plt.show()
-      return(Eg_Bgi_Efw, F)
-  def plot7(self):
-      plt.plot(Gp, p_z_Efw)
-      plt.show()
-      return(Gp, p_z_Efw)
+    """
+    Gas Condensate Material Balance Plot
+    """
+    def plot1(self):
+        plt.plot(Eg, F)
+        plt.show()
+        return(Eg, F)
+    def plot2(self):
+        plt.plot(Gp, p_z)
+        plt.show()
+        return((Gp, p_z))
+    def plot3(self):
+        plt.plot(Gp, F_eg)
+        plt.show()
+        return(Gp, F_eg)
+    def plot6(self):
+        plt.plot(Eg_Bgi_Efw, F)
+        plt.show()
+        return(Eg_Bgi_Efw, F)
+    def plot7(self):
+        plt.plot(Gp, p_z_Efw)
+        plt.show()
+        return(Gp, p_z_Efw)
 
 def regression(x, y):
     import numpy as np
