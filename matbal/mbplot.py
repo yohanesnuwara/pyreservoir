@@ -19,20 +19,13 @@ def condensate_belowdew(Rs, Rv, Rsi, Rvi, Bo, Bg, Bgi, Np, Gp):
     """
     Calculate the parameters for material balance plot of gas-condensate reservoirs
     below dewpoint pressure
+
     Input:
-    Rs: array
-    Rv: array
-    Rsi: initial Rs, float (NOTE: if data doesn't provide, calculate it with calculate_condensate_params function)
-    Rvi: initial Rv, float (from data Rv)
-    Bo: array
-    Bg: array
-    Np: array
-    Gp: array
-    Material balance plots:
-    * Plot 10.1: F vs Eg
-    Output:
-    F: array
-    Eg: array
+
+    array: Rs, Rv, Bo, Bg, Np, Gp
+    float: initial Rs (Rsi), initial Rv (Rvi), initial Bg (Bgi)
+
+    Output: F (array), Eg (array)
     """
     Btg = ((Bg * (1 - (Rs * Rvi))) + (Bo * (Rvi - Rv))) / (1 - (Rv * Rs))  # in RB/STB
     Bto = ((Bo * (1 - (Rv * Rsi))) + (Bg * (Rsi - Rs))) / (1 - (Rv * Rs))  # in RB/scf
@@ -47,16 +40,13 @@ def condensate_abovedew(Bg, Bgi, Gp, Gpi):
     """
     Calculate the parameters for material balance plot of gas-condensate reservoirs
     above dewpoint pressure
+
     Input:
-    Bg: array
-    Bgi: initial Bg, float
-    Gp: array
-    Gpi: initial Gp, float
-    Material balance plots:
-    * Plot 10.1: F vs Eg
-    Output:
-    F: array
-    Eg: array
+
+    array: Bg, Gp
+    float: initial Bg, initial Gp
+
+    Output: F (array), Eg (array)
     """
     Eg = Bg - Bgi
     F = Bg * (Gp - Gpi)
@@ -341,27 +331,115 @@ class drygas():
     Dry Gas Material Balance Plot
     """
 
-    def plot1(self):
-        plt.plot(Eg, F)
-        plt.show()
-        return (Eg, F)
+    def plot1(self, Bg, Bgi, Gp, Gpi):
+        """
+        Plot 1: F vs Eg
 
-    def plot2(self):
-        plt.plot(Gp, p_z)
-        plt.show()
-        return ((Gp, p_z))
+        Input:
 
-    def plot3(self):
-        plt.plot(Gp, F_eg)
-        plt.show()
-        return (Gp, F_eg)
+        array: Bg, Gp
+        float: initial Bg, initial Gp
 
-    def plot6(self):
+        Output:
+        array: Eg (x-axis values), F (y-axis values), and plot
+        """
+        Eg = Bg - Bgi
+        F = Bg * (Gp - Gpi)
+
+        # plotting
+        plt.plot(Eg, F, '.')
+        plt.title('Plot 1: F vs Eg')
+        plt.xlabel('Eg (RB/scf)');
+        plt.ylabel('F (res bbl)')
+        plt.xlim(xmin=0);
+        plt.ylim(ymin=0)
+        plt.show()
+
+    def plot2(self, Gp, p, z):
+        """
+        Plot 2: p/z vs Gp
+
+        Input:
+        array: Gp, p, z
+
+        Output:
+        array: Gp (x-axis values), p_z (y-axis values), plot
+        """
+        # calculate plotting parameters
+        p_z = p / z
+        Gp = Gp
+
+        # plotting
+        plt.plot(Gp, p_z, '.')
+        plt.title('Plot 2: p/z vs Gp')
+        plt.xlabel('Gp (scf)');
+        plt.ylabel('p/z (psia)')
+        plt.xlim(xmin=0);
+        plt.ylim(ymin=0)
+        plt.show()
+        return (Gp, p_z)
+
+    def plot3(self, Bg, Bgi, Gp, Gpi):
+        """
+        Plot 3: F/Eg vs Gp
+
+        Input:
+
+        array: Bg, Gp
+        float: initial Bg, initial Gp
+
+        Output:
+        array: Gp (x-axis values), F_Eg (y-axis values), and plot
+        """
+
+        Eg = Bg - Bgi
+        F = Bg * (Gp - Gpi)
+        F_Eg = F / Eg
+
+        plt.plot(Gp, F_Eg)
+        plt.show()
+        return (Gp, F_Eg)
+
+    def plot6(self, Bg, Bgi, Gp, Gpi, p, pi, cf, cw, swi):
+
+        """
+        Plot 6: F vs (Eg+Bgi*Efw)
+
+        Input:
+        array: Bg, Gp, p
+        float: Bgi (initial Bg), Gpi (initial Gp), pi (initial p), swi (initial sw), cf, cw
+
+        Output:
+        array: Eg_Bgi_Efw (x-axis values), F (y-axis values), and plot
+        """
+
+        Eg = Bg - Bgi
+        F = Bg * (Gp - Gpi)
+
+        # calculate parameters for plotting
+        Efw = Efw(cf, cw, swi, p, pi)
+        Eg_Bgi_Efw = Eg + Bgi * Efw
+
         plt.plot(Eg_Bgi_Efw, F)
         plt.show()
         return (Eg_Bgi_Efw, F)
 
-    def plot7(self):
+    def plot7(self, Gp, p, pi, z, cf, cw, swi):
+        """
+        Plot 7 (p/z*(1-Efw)) vs Gp
+
+        Input:
+        array: Gp, p, z
+        float: pi (initial p), swi (initial sw), cf, cw
+
+        Output:
+        array: Gp (x-axis values), p_z_Efw (y-axis values), plot
+        """
+        # calculate plotting parameters
+        Efw = Efw(cf, cw, swi, p, pi)
+        p_z_Efw = (p / z) * Efw
+
+        # plotting
         plt.plot(Gp, p_z_Efw)
         plt.show()
         return (Gp, p_z_Efw)
