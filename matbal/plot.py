@@ -7,6 +7,12 @@ Material Balance Plots
 import numpy as np
 import matplotlib.pyplot as plt
 
+def Efw(cf, cw, swi, p, pi):
+    """
+    Calculate formation expansion factor
+    """
+    Efw = ((cf + cw * swi) / (1 - swi)) * (pi - p)
+    return(Efw)
 
 def condensate_belowdew(Rs, Rv, Rsi, Rvi, Bo, Bg, Bgi, Np, Gp):
     """
@@ -79,7 +85,7 @@ class condensate():
           Bg_above_ = Bg[i]
           Gp_above_ = Gp[i]
           Bg_above.append(Bg_above_); Gp_above.append(Gp_above_)
-        
+
         F_above, Eg_above = condensate_abovedew(np.array(Bg_above), Bgi, np.array(Gp_above), Gpi)
 
         # for below dewpoint pressure
@@ -88,7 +94,7 @@ class condensate():
             Rsi = 1 / Rvi
         else:
             Rsi = Rsi
-        
+
         Rs_below = []; Rv_below = []; Bo_below = []; Bg_below = []
         Np_below = []; Gp_below = []
 
@@ -100,11 +106,11 @@ class condensate():
           Np_below_ = Np[i]
           Gp_below_ = Gp[i]
 
-          Rs_below.append(Rs_below_); Rv_below.append(Rv_below_); Bo_below.append(Bo_below_) 
+          Rs_below.append(Rs_below_); Rv_below.append(Rv_below_); Bo_below.append(Bo_below_)
           Bg_below.append(Bg_below_); Np_below.append(Np_below_); Gp_below.append(Gp_below_)
-        
-        F_below, Eg_below = condensate_belowdew(np.array(Rs_below), np.array(Rv_below), 
-                                                Rsi, Rvi, np.array(Bo_below), np.array(Bg_below), 
+
+        F_below, Eg_below = condensate_belowdew(np.array(Rs_below), np.array(Rv_below),
+                                                Rsi, Rvi, np.array(Bo_below), np.array(Bg_below),
                                                 Bgi, np.array(Np_below), np.array(Gp_below))
 
         # append F and Eg of the below- and above-dewpoint pressure
@@ -120,26 +126,173 @@ class condensate():
 
         return(F, Eg)
 
-    def plot2(self):
-        plt.plot(Gp, p_z)
+    def plot2(self, Gp, p, z=None, correlation='dranchuk_aboukassem',
+              temp=None, sg=None, x_h2s=None, x_co2=None):
+
+        if z == None:
+            # calculate the pseudoproperties
+            from pvt.gascorrelation import *
+            P_pr, T_pr = pseudoprops(p, temp, sg, x_h2s, x_co2)
+
+            if correlation == 'dranchuk_aboukassem':
+                # calculate z using Dranchuk-Aboukassem method
+                x = compressibility_factor()
+
+                z = []
+                for i in range(len(P_pr)):
+                    z_ = compressibility_factor.dranchuk_aboukassem(x, P_pr[i], T_pr[i])
+                    z.append(z_)
+
+        else:
+            z = z
+
+        # calculate plotting parameters
+        p_z = p / z
+        Gp = Gp
+
+        # plotting
+        plt.plot(Gp, p_z, '.')
+        plt.title('Plot 2: p/z vs Gp')
+        plt.xlabel('Gp (scf)'); plt.ylabel('p/z (psia)')
+        plt.xlim(xmin=0); plt.ylim(ymin=0)
         plt.show()
-        return((Gp, p_z))
-    def plot3(self):
-        plt.plot(Gp, F_eg)
+        return(Gp, p_z)
+
+    def plot3(self, Pdp, p, Rs, Rv, Rvi, Bo, Bg, Bgi, Np, Gp, Gpi, Rsi=None):
+
+        # for above dewpoint pressure
+        id_above = np.where(p > Pdp)[0]
+
+        Bg_above = []; Gp_above = []
+
+        for i in id_above:
+          Bg_above_ = Bg[i]
+          Gp_above_ = Gp[i]
+          Bg_above.append(Bg_above_); Gp_above.append(Gp_above_)
+
+        F_above, Eg_above = condensate_abovedew(np.array(Bg_above), Bgi, np.array(Gp_above), Gpi)
+
+        # for below dewpoint pressure
+        id_below = np.where(p <= Pdp)[0]
+        if Rsi == None:
+            Rsi = 1 / Rvi
+        else:
+            Rsi = Rsi
+
+        Rs_below = []; Rv_below = []; Bo_below = []; Bg_below = []
+        Np_below = []; Gp_below = []
+
+        for i in id_below:
+          Rs_below_ = Rs[i]
+          Rv_below_ = Rv[i]
+          Bo_below_ = Bo[i]
+          Bg_below_ = Bg[i]
+          Np_below_ = Np[i]
+          Gp_below_ = Gp[i]
+
+          Rs_below.append(Rs_below_); Rv_below.append(Rv_below_); Bo_below.append(Bo_below_)
+          Bg_below.append(Bg_below_); Np_below.append(Np_below_); Gp_below.append(Gp_below_)
+
+        F_below, Eg_below = condensate_belowdew(np.array(Rs_below), np.array(Rv_below),
+                                                Rsi, Rvi, np.array(Bo_below), np.array(Bg_below),
+                                                Bgi, np.array(Np_below), np.array(Gp_below))
+
+        # append F and Eg of the below- and above-dewpoint pressure
+        F = np.append(F_above, F_below)
+        Eg = np.append(Eg_above, Eg_below)
+
+        # calculate parameters for plotting
+        F_Eg = F / Eg
+
+        plt.plot(Gp, F_Eg)
         plt.show()
-        return(Gp, F_eg)
-    def plot6(self):
+        return(Gp, F_Eg)
+
+    def plot6(self, Pdp, p, Rs, Rv, Rvi, Bo, Bg, Bgi, Np, Gp, Gpi, cf, cw, swi, pi, Rsi=None):
+
+        # for above dewpoint pressure
+        id_above = np.where(p > Pdp)[0]
+
+        Bg_above = []; Gp_above = []
+
+        for i in id_above:
+          Bg_above_ = Bg[i]
+          Gp_above_ = Gp[i]
+          Bg_above.append(Bg_above_); Gp_above.append(Gp_above_)
+
+        F_above, Eg_above = condensate_abovedew(np.array(Bg_above), Bgi, np.array(Gp_above), Gpi)
+
+        # for below dewpoint pressure
+        id_below = np.where(p <= Pdp)[0]
+        if Rsi == None:
+            Rsi = 1 / Rvi
+        else:
+            Rsi = Rsi
+
+        Rs_below = []; Rv_below = []; Bo_below = []; Bg_below = []
+        Np_below = []; Gp_below = []
+
+        for i in id_below:
+          Rs_below_ = Rs[i]
+          Rv_below_ = Rv[i]
+          Bo_below_ = Bo[i]
+          Bg_below_ = Bg[i]
+          Np_below_ = Np[i]
+          Gp_below_ = Gp[i]
+
+          Rs_below.append(Rs_below_); Rv_below.append(Rv_below_); Bo_below.append(Bo_below_)
+          Bg_below.append(Bg_below_); Np_below.append(Np_below_); Gp_below.append(Gp_below_)
+
+        F_below, Eg_below = condensate_belowdew(np.array(Rs_below), np.array(Rv_below),
+                                                Rsi, Rvi, np.array(Bo_below), np.array(Bg_below),
+                                                Bgi, np.array(Np_below), np.array(Gp_below))
+
+        # append F and Eg of the below- and above-dewpoint pressure
+        F = np.append(F_above, F_below)
+        Eg = np.append(Eg_above, Eg_below)
+        
+        # calculate parameters for plotting
+        Efw = Efw(cf, cw, swi, p, pi)
+        Eg_Bgi_Efw = Eg + Bgi * Efw
+        
+        # plotting
         plt.plot(Eg_Bgi_Efw, F)
         plt.show()
         return(Eg_Bgi_Efw, F)
-    def plot7(self):
+    
+    
+    def plot7(self, Gp, p, cf, cw, swi, pi, z=None, correlation='dranchuk_aboukassem',
+              temp=None, sg=None, x_h2s=None, x_co2=None):
+
+        if z == None:
+            # calculate the pseudoproperties
+            from pvt.gascorrelation import *
+            P_pr, T_pr = pseudoprops(p, temp, sg, x_h2s, x_co2)
+
+            if correlation == 'dranchuk_aboukassem':
+                # calculate z using Dranchuk-Aboukassem method
+                x = compressibility_factor()
+
+                z = []
+                for i in range(len(P_pr)):
+                    z_ = compressibility_factor.dranchuk_aboukassem(x, P_pr[i], T_pr[i])
+                    z.append(z_)
+
+        else:
+            z = z
+
+        # calculate plotting parameters
+        Efw = Efw(cf, cw, swi, p, pi)
+        p_z_Efw = (p / z) * Efw
+
+        # plotting
         plt.plot(Gp, p_z_Efw)
         plt.show()
         return(Gp, p_z_Efw)
 
-class condensategas():
+class drygas():
     """
-    Gas Condensate Material Balance Plot
+    Dry Gas Material Balance Plot
     """
     def plot1(self):
         plt.plot(Eg, F)
