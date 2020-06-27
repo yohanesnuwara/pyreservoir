@@ -6,6 +6,7 @@ Material Balance Plots
 
 import numpy as np
 import matplotlib.pyplot as plt
+from gascorrelation import *
 
 def Efw(cf, cw, swi, p, pi):
     """
@@ -131,7 +132,6 @@ class condensate():
 
         if z == None:
             # calculate the pseudoproperties
-            from pvt.gascorrelation import *
             P_pr, T_pr = pseudoprops(p, temp, sg, x_h2s, x_co2)
 
             if correlation == 'dranchuk_aboukassem':
@@ -266,7 +266,6 @@ class condensate():
 
         if z == None:
             # calculate the pseudoproperties
-            from pvt.gascorrelation import *
             P_pr, T_pr = pseudoprops(p, temp, sg, x_h2s, x_co2)
 
             if correlation == 'dranchuk_aboukassem':
