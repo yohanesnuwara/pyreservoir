@@ -72,13 +72,13 @@ class compressibility_factor():
 
         return(z)
 
-# testing
-pressure = 2010 # in psia
-temp = 75 # in deg F
-sg = 0.7 # specific gravity
-x_h2s = 0.07 # mole fraction
-x_co2 = 0.1
+# # testing
+# pressure = 2010 # in psia
+# temp = 75 # in deg F
+# sg = 0.7 # specific gravity
+# x_h2s = 0.07 # mole fraction
+# x_co2 = 0.1
 
-P_pr, T_pr = pseudoprops(pressure, temp, sg, x_h2s, x_co2)
-z = compressibility_factor.dranchuk_aboukassem(compressibility_factor(), P_pr, T_pr)
-print(z)
+# P_pr, T_pr = pseudoprops(pressure, temp, sg, x_h2s, x_co2)
+# z = compressibility_factor.dranchuk_aboukassem(compressibility_factor(), P_pr, T_pr)
+# print(z)
