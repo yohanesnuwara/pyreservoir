@@ -1,4 +1,4 @@
-# pyreservoir
+# PyReservoir
 Python utilities for reservoir engineering calculations
 
 <div>
