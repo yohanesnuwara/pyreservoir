@@ -68,7 +68,7 @@ class condensate():
     Gas Condensate Material Balance Plot
     """
 
-    def plot1(self, Pdp, p, Bg, Bgi, Bo, Np, Gp, Gpi, Rv, Rvi, Rs=None, Rsi=None):
+    def plot1(self, Pdp, p, Bg, Bgi, Bo, Np, Gp, Gpi, Rv, Rvi, Rs, Rsi=None):
         """
         Plot 1: F vs Eg
 
@@ -76,8 +76,8 @@ class condensate():
         array: p, Bg, Bo, Np, Gp, Rv, Rs
         float: Pdp (dewpoint-pressure), Bgi (initial Bg), Gpi (initial Gp), Rvi (initial Rv), Rsi (initial Rs)
 
-        For Rs and Rsi, specify as None, if there's no data. Through this function, both will be calculated theoretically
-        If there are data of Rs and Rsi, specify the variable.
+        Specify None to Rsi, if Rs data contains NaN values (no data)
+        NaN values populates in the pressure above dewpoint (Pi > Pdp), because there is no liquid in the single-phase gas
 
         Output:
         array: Eg (x-axis values), F (y-axis values), and plot
@@ -99,12 +99,10 @@ class condensate():
 
         # for below dewpoint pressure
         id_below = np.where(p <= Pdp)[0]
-        if Rs == None and Rsi == None:
-            Rs = 1 / Rv
-            Rsi = Rs[0]
+        if Rsi == None:
+            Rsi = 1 / Rvi
         else:
-            Rs = Rs
-            Rsi = Rs[0]
+            Rsi = Rsi
 
         Rs_below = [];
         Rv_below = [];
@@ -171,7 +169,7 @@ class condensate():
         plt.show()
         return (Gp, p_z)
 
-    def plot3(self, Pdp, p, Bg, Bgi, Bo, Np, Gp, Gpi, Rv, Rvi, Rs=None, Rsi=None):
+    def plot3(self, Pdp, p, Bg, Bgi, Bo, Np, Gp, Gpi, Rv, Rvi, Rs, Rsi=None):
         """
         Plot 1: F/Eg vs Gp
 
@@ -179,8 +177,8 @@ class condensate():
         array: p, Bg, Bo, Np, Gp, Rv, Rs
         float: Pdp (dewpoint-pressure), Bgi (initial Bg), Gpi (initial Gp), Rvi (initial Rv), Rsi (initial Rs)
 
-        For Rs and Rsi, specify as None, if there's no data. Through this function, both will be calculated theoretically
-        If there are data of Rs and Rsi, specify the variable.
+        Specify None to Rsi, if Rs data contains NaN values (no data)
+        NaN values populates in the pressure above dewpoint (Pi > Pdp), because there is no liquid in the single-phase gas
 
         Output:
         array: Gp (x-axis values), F_Eg (y-axis values), and plot
@@ -201,12 +199,10 @@ class condensate():
 
         # for below dewpoint pressure
         id_below = np.where(p <= Pdp)[0]
-        if Rs == None and Rsi == None:
-            Rs = 1 / Rv
-            Rsi = Rs[0]
+        if Rsi == None:
+            Rsi = 1 / Rvi
         else:
-            Rs = Rs
-            Rsi = Rs[0]
+            Rsi = Rsi
 
         Rs_below = [];
         Rv_below = [];
@@ -245,7 +241,7 @@ class condensate():
         plt.show()
         return (Gp, F_Eg)
 
-    def plot6(self, Pdp, p, pi, Bg, Bgi, Bo, Np, Gp, Gpi, cf, cw, swi, Rv, Rvi, Rs=None, Rsi=None):
+    def plot6(self, Pdp, p, pi, Bg, Bgi, Bo, Np, Gp, Gpi, cf, cw, swi, Rv, Rvi, Rs, Rsi=None):
         """
         Plot 6: F vs (Eg+Bgi*Efw)
 
@@ -253,8 +249,8 @@ class condensate():
         array: p, Bg, Bo, Np, Gp, Rv, Rs
         float: Pdp (dewpoint-pressure), Bgi (initial Bg), Gpi (initial Gp), Rvi (initial Rv), Rsi (initial Rs), pi (initial p), swi (initial sw), cf, cw
 
-        For Rs and Rsi, specify as None, if there's no data. Through this function, both will be calculated theoretically
-        If there are data of Rs and Rsi, specify the variable.
+        Specify None to Rsi, if Rs data contains NaN values (no data)
+        NaN values populates in the pressure above dewpoint (Pi > Pdp), because there is no liquid in the single-phase gas
 
         Output:
         array: Eg_Bgi_Efw (x-axis values), F (y-axis values), and plot
@@ -275,12 +271,10 @@ class condensate():
 
         # for below dewpoint pressure
         id_below = np.where(p <= Pdp)[0]
-        if Rs == None and Rsi == None:
-            Rs = 1 / Rv
-            Rsi = Rs[0]
+        if Rsi == None:
+            Rsi = 1 / Rvi
         else:
-            Rs = Rs
-            Rsi = Rs[0]
+            Rsi = Rsi
 
         Rs_below = [];
         Rv_below = [];
