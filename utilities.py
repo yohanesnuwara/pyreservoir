@@ -85,9 +85,9 @@ def convert(x, from_='c', to_='f'):
     if from_ == 'ft2' and to_ == 'md':
         return((x / 10.764) * 9.869233E+13)
 
-def nomenclatures(parameter):
+def dictionary(parameter):
     """
-    Dictionary for inputs and outputs, giving the descriptions, and the oilfield units
+    Nomenclatures for inputs and outputs, giving the descriptions, and the oilfield units
 
     Input:
     parameter = the input-output parameter, string
@@ -98,15 +98,74 @@ def nomenclatures(parameter):
     """
     description = {"Bg": "gas formation volume factor",
                    "Bo": "oil formation volume factor",
-                   "Bw": "water formation volume factor"}
+                   "Bw": "water formation volume factor",
+                   "p": "pressure",
+                   "temp": "temperature",
+                   "cf":"formation compressibility",
+                   "cw": "water compressibility",
+                   "Efw": "formation expansion factor",
+                   "Eg": "gas expansion factor",
+                   "F": "reservoir voidage",
+                   "Fr": "recovery factor",
+                   "Gfgi": "initial gas in place",
+                   "Gp": "cumulative gas produced",
+                   "h": "thickness",
+                   "Rv": "volatile oil-gas ratio",
+                   "Rs": "solution gas-oil ratio",
+                   "sw": "water saturation",
+                   "t": "time",
+                   "We": "water encroachment from aquifer",
+                   "We_D": "dimensionless water encroachment from aquifer",
+                   "Wp": "cumulative water produced",
+                   "z": "gas compressibility factor",
+                   "sg": "gas specific gravity",
+                   "poro": "porosity",
+                   "area": "reservoir productive area",
+                   "Wi": "cumulative water injected",
+                   "Gi": "cumulative gas injected",
+                   "Vo": "condensate volume in PVT cell",
+                   "z2": "two-phase compressibility factor",
+                   "x_co2": "mole fraction of CO2 in gas",
+                   "x_h2s": "mole fraction of H2S in gas",
+                   "P_pr": "pseudo-reduced pressure",
+                   "T_pr": "pseudo-reduced temperature"
+                   }
     unit = {"Bg": "RB/scf",
             "Bo": "RB/STB",
-            "Bw": "RB/STB"}
+            "Bw": "RB/STB",
+            "p": "psia",
+            "temp": "fahrenheit, celsius, rankine, kelvin",
+            "cf": "psi^-1",
+            "cw": "psi^-1",
+            "Efw": "dimensionless",
+            "Eg": "RB/scf",
+            "F": "res bbl",
+            "Fr": "dimensionless",
+            "Gfgi": "ft3 (scf)",
+            "Gp": "ft3 (scf)",
+            "h": "ft",
+            "Rv": "RB/scf",
+            "Rs": "RB/STB",
+            "swi": "fraction, v/v",
+            "t": "any",
+            "We": "res bbl",
+            "We_D": "dimensionless",
+            "Wp": "STB",
+            "z": "dimensionless",
+            "sg": "dimensionless",
+            "poro": "fraction, v/v",
+            "area": "ft2",
+            "Wi": "STB",
+            "Gi": "ft3 (scf)",
+            "Vo": "res bbl",
+            "z2": "dimensionless",
+            "x_co2": "fraction, v/v",
+            "x_h2s": "fraction, v/v",
+            "P_pr": "dimensionless",
+            "T_pr": "dimensionless"
+            }
 
     description = description[parameter]
     unit = unit[parameter]
 
     return (description, unit)
-
-# testing
-print(nomenclatures("Bw"))
