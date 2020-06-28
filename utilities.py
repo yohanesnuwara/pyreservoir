@@ -70,6 +70,10 @@ def convert(x, from_='c', to_='f'):
         return(x * 35.3147)
     if from_ == 'acre-ft' and to_ == 'ft3':
         return(x * 43559.9)
+    if from_ == 'm3' and to_ == 'bbl':
+        return(x * 6.28981)
+    if from_ == 'acre-ft' and to_ == 'bbl':
+        return(x * 7758.36)
     if from_ == 'ft3' and to_ == 'bbl':
         return(x * 0.178108)
     if from_ == 'bbl' and to_ == 'ft3':
