@@ -7,6 +7,9 @@ Correlation Models for Gas Properties
 from scipy.optimize import fsolve  # non-linear solver
 import numpy as np
 
+def density():
+    return()
+
 def pseudoprops(pressure, temp, sg, x_h2s, x_co2):
     """
     Pseudoproperties of gas
@@ -82,3 +85,13 @@ class compressibility_factor():
 # P_pr, T_pr = pseudoprops(pressure, temp, sg, x_h2s, x_co2)
 # z = compressibility_factor.dranchuk_aboukassem(compressibility_factor(), P_pr, T_pr)
 # print(z)
+
+class fvf():
+    def 
+
+class viscosity():
+    def
+
+class isocompressibility():
+    def
+   
