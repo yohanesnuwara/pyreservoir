@@ -444,6 +444,69 @@ class drygas():
         plt.show()
         return (Gp, p_z_Efw)
 
+class undersaturated():
+    """
+    Undersaturated Oil Reservoir Material Balance Plot
+    """
+    def plot1(self, p, pi, Bg, Bo, Boi, Np, Gp, cf, cw, swi, Rs, Rsi, Rv):
+        """
+        Plot 1: F vs Eo+(Bti* Efw)
+
+        Rv is the most important parameter that determines a volatile or non-volatile reservoir
+        If you have the data which Rv contains all zeros, means you have a non-volatile
+        If Rv not zero, means you have a volatile
+        """
+        # calculate total oil FVF (Bto)
+        Bto = ((Bo * (1 - (Rv * Rsi))) + (Bg * (Rsi - Rs))) / (1 - (Rv * Rs))
+
+        # calculate Eo+(Boi*Efw)
+        Efw = ((cf + (cw * swi)) / (1 - swi)) * (pi - p)
+        Eo = Bto - Boi
+        Eo_Bti_Efw = Eo + Boi * Efw
+
+        # calculate reservoir voidage
+        F = (Np * ((Bo - (Rs * Bg)) / (1 - (Rv * Rs)))) + (Gp * ((Bg - (Rv * Bo)) / (1 - (Rv * Rs))))
+
+        # plot
+        plt.plot(Eo_Bti_Efw, F, '.')
+        plt.title('Plot 1: F vs Eo+(Bti* Efw)')
+        plt.xlim(xmin=0); plt.ylim(ymin=0)
+        plt.xlabel('Eo+(Bti*Efw) (RB/STB)')
+        plt.ylabel('F (res bbl)')
+        plt.show()
+
+        return(Eo_Bti_Efw, F)
+
+    def plot2(self, p, pi, Bg, Bo, Boi, Np, Gp, cf, cw, swi, Rs, Rsi, Rv):
+        """
+        Plot 2: F/Eo+(Bti* Efw) vs Np (Waterdrive Diagnostic Plot)
+
+        Rv is the most important parameter that determines a volatile or non-volatile reservoir
+        If you have the data which Rv contains all zeros, means you have a non-volatile
+        If Rv not zero, means you have a volatile
+        """
+        # calculate total oil FVF (Bto)
+        Bto = ((Bo * (1 - (Rv * Rsi))) + (Bg * (Rsi - Rs))) / (1 - (Rv * Rs))
+
+        # calculate Eo+(Boi*Efw)
+        Efw = ((cf + (cw * swi)) / (1 - swi)) * (pi - p)
+        Eo = Bto - Boi
+        Eo_Bti_Efw = Eo + Boi * Efw
+
+        # calculate reservoir voidage
+        F = (Np * ((Bo - (Rs * Bg)) / (1 - (Rv * Rs)))) + (Gp * ((Bg - (Rv * Bo)) / (1 - (Rv * Rs))))
+
+        # calculate parameters
+        N = F / Eo_Bti_Efw
+
+        plt.plot(Np, N, '.')
+        plt.title('Plot 2: F/(Eo+(Bti* Efw)) vs Np')
+        plt.xlim(xmin=0); plt.ylim(ymin=0)
+        plt.xlabel('Np (STB)');
+        plt.ylabel('N (STB)')
+        plt.show()
+        
+        return(Np, N)
 
 def regression(x, y):
     import numpy as np
