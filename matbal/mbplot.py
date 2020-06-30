@@ -448,7 +448,7 @@ class undersaturated():
     """
     Undersaturated Oil Reservoir Material Balance Plot
     """
-    def plot1(self, p, pi, Bg, Bo, Boi, Np, Gp, cf, cw, swi, Rs, Rsi, Rv):
+    def plot1(self, p, Bg, Bo, Np, Gp, cf, cw, swi, Rs, Rv):
         """
         Plot 1: F vs Eo+(Bti* Efw)
 
@@ -456,6 +456,11 @@ class undersaturated():
         If you have the data which Rv contains all zeros, means you have a non-volatile
         If Rv not zero, means you have a volatile
         """
+        # initial conditions
+        pi = p[0]
+        Boi = Bo[0]
+        Rsi = Rs[0]
+        
         # calculate total oil FVF (Bto)
         Bto = ((Bo * (1 - (Rv * Rsi))) + (Bg * (Rsi - Rs))) / (1 - (Rv * Rs))
 
@@ -477,7 +482,7 @@ class undersaturated():
 
         return(Eo_Bti_Efw, F)
 
-    def plot2(self, p, pi, Bg, Bo, Boi, Np, Gp, cf, cw, swi, Rs, Rsi, Rv):
+    def plot2(self, p, Bg, Bo, Np, Gp, cf, cw, swi, Rs, Rv):
         """
         Plot 2: F/Eo+(Bti* Efw) vs Np (Waterdrive Diagnostic Plot)
 
@@ -485,6 +490,11 @@ class undersaturated():
         If you have the data which Rv contains all zeros, means you have a non-volatile
         If Rv not zero, means you have a volatile
         """
+        # initial conditions
+        pi = p[0]
+        Boi = Bo[0]
+        Rsi = Rs[0]
+        
         # calculate total oil FVF (Bto)
         Bto = ((Bo * (1 - (Rv * Rsi))) + (Bg * (Rsi - Rs))) / (1 - (Rv * Rs))
 
@@ -505,7 +515,7 @@ class undersaturated():
         plt.xlabel('Np (STB)');
         plt.ylabel('N (STB)')
         plt.show()
-        
+
         return(Np, N)
 
 def regression(x, y):
