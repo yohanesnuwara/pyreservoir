@@ -52,6 +52,92 @@ def condensate_abovedew(Bg, Bgi, Gp, Gpi):
     F = Bg * (Gp - Gpi)
     return (F, Eg)
 
+def calculate_undersaturated(p, Bg, Bo, Np, Gp, cf, cw, swi, Rs, Rv, oilfvf=None):
+    """
+    Calculate Material Balance Parameter of Undersaturated (Volatile and Non-Volatile) Reservoirs
+
+    INPUT: oilfvf = None, 'total' (read NOTE below)
+
+    OUTPUT: Bto, Eo, Efw, F
+
+    NOTE:
+
+    One way to classify first what type of your reservoir is, look at the Rv value
+    If you have the data which Rv contains all zeros, means you have a non-volatile
+    If Rv not zero, means you have a volatile reservoir
+
+    This program normally runs with all the input data specified. If some of the input data is incomplete,
+    for instance Rv and Bo, read this information:
+
+    1.
+    If you don't have Bo data, but total oil FVF (Bto) data, specify oilfvf = 'total'
+
+    2.
+    In case you are having non-volatile reservoir, if you don't have Rv data, program can still run.
+
+    3.
+    In case you are having volatile reservoir, make sure you have Rv data, or the program can't run.
+    """
+    # initial conditions
+    pi = p[0]
+    Boi = Bo[0]
+    Rsi = Rs[0]
+
+    if oilfvf == 'total':
+        Bto = []
+        F = []
+
+        for i in range(len(p)):
+
+            if Rv[i] == 0:
+                # reservoir is non-volatile undersaturated
+                Bto_ = Bo[i]
+                F_ = Np[i](Bto_ - Rsi * Bg[i]) + (Gp[i] * Bg[i])
+
+            Bto.append(Bto_)
+            F.append(F_)
+
+            if Rv[i] != 0:
+                # reservoir is volatile undersaturated
+                Bto_ = Bo[i]
+                Bo_ = ((Bto_ * (1 - Rv[i] * Rs[i])) - (Bg[i] * (Rsi - Rs[i]))) / (1 - Rv[i] * Rs[i])
+                F_ = (Np * ((Bo_ - (Rs * Bg)) / (1 - (Rv * Rs)))) + (Gp * ((Bg - (Rv * Bo_)) / (1 - (Rv * Rs))))
+
+            Bto.append(Bto_)
+            F.append(F_)
+
+        Bto = np.array(Bto)
+        F = np.array(F)
+
+    if oilfvf == None:
+        Bto = []
+        F = []
+
+        for i in range(len(p)):
+
+            if Rv[i] == 0:
+                # reservoir is non-volatile undersaturated
+                Bto_ = Bo[i] + Bg[i] * (Rsi - Rs[i])
+                F_ = Np[i](Bo[i] - Rs[i] * Bg[i]) + (Gp[i] * Bg[i])
+            Bto.append(Bto_)
+            F.append(F_)
+
+            if Rv[i] != 0:
+                # reservoir is volatile undersaturated
+                Bto_ = ((Bo[i] * (1 - (Rv[i] * Rsi))) + (Bg[i] * (Rsi - Rs[i]))) / (1 - (Rv[i] * Rs[i]))
+                F_ = (Np * ((Bo - (Rs * Bg)) / (1 - (Rv * Rs)))) + (Gp * ((Bg - (Rv * Bo)) / (1 - (Rv * Rs))))
+            Bto.append(Bto_)
+            F.append(F_)
+
+    Bto = np.array(Bto)
+    F = np.array(F)
+
+    # calculate Eo+(Boi*Efw)
+    Efw = ((cf + (cw * swi)) / (1 - swi)) * (pi - p)
+    Eo = Bto - Boi
+
+    return(Bto, Eo, Efw, F)
+
 
 class condensate():
     """
@@ -518,6 +604,51 @@ class undersaturated():
 
         return(Np, N)
 
+class undersaturated():
+    """
+    Undersaturated Oil Reservoir Material Balance Plots
+
+    OUTPUT: Matplotlib plot and array for each of the axes
+    """
+    def plot1(self, p, Bg, Bo, Np, Gp, cf, cw, swi, Rs, Rv, oilfvf=None):
+        """
+        Plot 1: F vs Eo+(Bti* Efw)
+        """
+        Bto, Eo, Efw, F = calculate_undersaturated(p, Bg, Bo, Np, Gp, cf, cw, swi, Rs, Rv, oilfvf)
+        Boi = Bo[0]
+        Eo_Boi_Efw = Eo + Boi * Efw
+
+        # plot
+        plt.plot(Eo_Boi_Efw, F, '.')
+        plt.title('Plot 1: F vs Eo+(Bti* Efw)')
+        plt.xlim(xmin=0);
+        plt.ylim(ymin=0)
+        plt.xlabel('Eo+(Bti*Efw) (RB/STB)')
+        plt.ylabel('F (res bbl)')
+        plt.show()
+
+        return(Eo_Boi_Efw, F)
+
+    def plot2(self, p, Bg, Bo, Np, Gp, cf, cw, swi, Rs, Rv, oilfvf):
+        """
+        Plot 2: F/Eo+(Bti* Efw) vs Np
+        """
+        Bto, Eo, Efw, F = calculate_undersaturated(p, Bg, Bo, Np, Gp, cf, cw, swi, Rs, Rv, oilfvf)
+        Boi = Bo[0]
+        Eo_Boi_Efw = Eo + Boi * Efw
+        N = F / Eo_Boi_Efw
+
+        # plot
+        plt.plot(Np, N, '.')
+        plt.title('Plot 2: F/Eo+(Bti* Efw) vs Np')
+        plt.xlim(xmin=0);
+        plt.ylim(ymin=0)
+        plt.xlabel('Np (STB)')
+        plt.ylabel('F/Eo+(Bti* Efw) (STB)')
+        plt.show()
+
+        return(Eo_Boi_Efw, F)    
+    
 def regression(x, y):
     import numpy as np
     x = np.array(x);
