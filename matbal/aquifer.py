@@ -28,20 +28,6 @@ def fetkovich_productivity_index(perm, h_aq, mu_w, r_aq, r_R, theta, flow='const
       J = (0.007082 * perm * h_aq * theta) / ((mu_w * (np.log(r_aq / r_R) - 0.75) * 360))
       return(J)
 
-def fetkovich_productivity_index_flow(perm, h_aq, mu_w, r_aq, r_R, theta):
-  "calculate productivity index for condition of FLOW FROM THE AQUIFER"
-  import numpy as np
-  # mu_w: water viscosity
-  J = (0.007082 * perm * h_aq * theta) / ((mu_w * (np.log(r_aq / r_R) - 0.75) * 360))
-  return(J)
-
-def fetkovich_productivity_index_noflow(perm, h_aq, mu_w, r_aq, r_R, theta):
-  "calculate productivity index for condition of NO FLOW / CONSTANT PRESSURE AT THE OUTER BOUNDARY"
-  import numpy as np
-  # mu_w: water viscosity
-  J = (0.007082 * perm * h_aq * theta) / ((mu_w * (np.log(r_aq / r_R)) * 360))
-  return(J)
-
 def fetkovich(datetime, pressure, Wei, J):
     """
     Calculate aquifer influx (We) using Fetkovich Pseudo-steady Method
