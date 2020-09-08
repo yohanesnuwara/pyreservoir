@@ -5,7 +5,7 @@ Volumetrics calculation
 @email: ign.nuwara97@gmail.com
 """
 
-def get_areas(figs, xi, yi, plot='Yes'):
+def get_contours(figs, xi, yi, plot='Yes'):
   # get the contour lines using "allsegs" method
   import numpy as np
   
