@@ -10,3 +10,13 @@ Python utilities for reservoir engineering calculations
 * Well-test analysis `pywelltest`
 * Material balance `pymbal`
 * Decline curve analysis `pydca`
+
+## MBAL for dry-gas (DG) and gas-condensate (GC)
+
+**Differences and similarities of variables**
+
+|**Variables**|**DG** & **GC above dew-point**|**GC below dew-point**|
+|:--:|:--:|:--:|
+|Reservoir voidage (F)|||
+|Total gas FVF (Btg)|||
+|Gas expansion factor (Eg)|||
