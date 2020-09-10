@@ -44,6 +44,7 @@ def get_contours(figs, xi, yi, plot='Yes'):
 def compute_area(contour_all):
   # Use Green's theorem to compute the area
   # enclosed by the given contour.
+  import numpy as np
   def area(vs):
       a = 0
       x0,y0 = vs[0]
