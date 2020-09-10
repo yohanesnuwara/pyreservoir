@@ -8,6 +8,7 @@ Volumetrics calculation
 def get_contours(figs, xi, yi, plot='Yes'):
   # get the contour lines using "allsegs" method
   import numpy as np
+  import matplotlib.pyplot as plt
   
   lines = figs.allsegs
 
