@@ -66,6 +66,7 @@ def compute_area(contour_all):
   return contour_area
 
 def trapezoid(y_vals, h):
+  import numpy as np
 
   # simplification: V = h/2*(a1+an) + h/2(2*a2+2*a3+2*an-1) as V = first_term + second_term
   first_term = 0.5 * h * (y_vals[0] + y_vals[-1])
