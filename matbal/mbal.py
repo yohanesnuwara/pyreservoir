@@ -32,6 +32,7 @@ class drygas():
 
     def plot(self, p, z, Gp, F, Btg, Efw, Eg):
         """Create Material Balance Plots for Dry-Gas Reservoir"""
+        import numpy as np
         import matplotlib.pyplot as plt
         from scipy.optimize import curve_fit
 
