@@ -211,6 +211,12 @@ class gascondensate():
         import matplotlib.pyplot as plt
         from scipy.optimize import curve_fit
 
+        def calculate_condensate_inplace(Gfgi, Rv):
+            """Calculate initial condensate-in-place from the calculated OGIP"""
+            Rvi = Rv[0]
+            condensate_inplace = Rvi * Gfgi # in STB
+            return condensate_inplace        
+
         # plot attributes
         title_size = 12
         title_pad = 10
@@ -240,10 +246,13 @@ class gascondensate():
         m = popt[0]
         Gfgi = m * max(y1) / max(x1) # denormalize the slope, hence the OGIP
 
+        ## calculate condensate-in-place
+        condensate_inplace = calculate_condensate_inplace(Gfgi, Rv)
+
         ## plot the regression line
         x1_fit = np.linspace(min(x1), max(x1), 5)
         y1_fit = linear_zero_intercept(x1_fit, Gfgi)
-        plt.plot(x1_fit, y1_fit, label='{} MMSCF'.format(np.round(Gfgi * 1E-6, 3)))
+        plt.plot(x1_fit, y1_fit, label='(G) {} MMSCF (C) {} MSTB'.format(np.round(Gfgi * 1E-6, 3), np.round(condensate_inplace * 1E-3, 3)))
         plt.legend()
 
         # Plot 2: p/z vs Gp
@@ -266,10 +275,13 @@ class gascondensate():
           m = m * max(y2) / max(x2) # denormalize the slope
           c = c * max(y2) # denormalize the intercept
 
+          ## calculate condensate-in-place
+          condensate_inplace = calculate_condensate_inplace(Gfgi, Rv)          
+
           ## plot the regression line
           x2_fit = np.linspace(min(x2), max(x2), 5)
           y2_fit = linear_with_intercept(x2_fit, m, c)
-          plt.plot(x2_fit, y2_fit, label='{} MMSCF'.format(np.round(Gfgi * 1E-6, 3)))
+          plt.plot(x2_fit, y2_fit, label='(G) {} MMSCF (C) {} MSTB'.format(np.round(Gfgi * 1E-6, 3), np.round(condensate_inplace * 1E-3, 3)))
           plt.legend()        
 
         # Plot 3: F/Eg vs Gp
@@ -289,10 +301,13 @@ class gascondensate():
         m = m * max(y3[1:]) / max(x3[1:]) # denormalize the slope
         Gfgi = c * max(y3[1:]) # denormalize the intercept, hence the OGIP
 
+        ## calculate condensate-in-place
+        condensate_inplace = calculate_condensate_inplace(Gfgi, Rv)        
+
         ## plot the regression line
         x3_fit = np.linspace(min(x3[1:]), max(x3[1:]), 5)
         y3_fit = linear_with_intercept(x3_fit, m, Gfgi)
-        plt.plot(x3_fit, y3_fit, label='{} MMSCF'.format(np.round(Gfgi * 1E-6, 3)))
+        plt.plot(x3_fit, y3_fit, label='(G) {} MMSCF (C) {} MSTB'.format(np.round(Gfgi * 1E-6, 3), np.round(condensate_inplace * 1E-3, 3)))
         plt.legend()          
 
         # Plot 6: F vs (Eg+Bgi*Efw)
@@ -312,10 +327,13 @@ class gascondensate():
         m = popt[0]
         Gfgi = m * max(y6) / max(x6) # denormalize the slope, hence the OGIP
 
+        ## calculate condensate-in-place
+        condensate_inplace = calculate_condensate_inplace(Gfgi, Rv)        
+
         ## plot the regression line
         x6_fit = np.linspace(min(x6), max(x6), 5)
         y6_fit = linear_zero_intercept(x6_fit, Gfgi)
-        plt.plot(x6_fit, y6_fit, label='{} MMSCF'.format(np.round(Gfgi * 1E-6, 3)))
+        plt.plot(x6_fit, y6_fit, label='(G) {} MMSCF (C) {} MSTB'.format(np.round(Gfgi * 1E-6, 3), np.round(condensate_inplace * 1E-3, 3)))
         plt.legend()        
 
         # Plot 7: ((p/z)*(1-Efw)) vs Gp
@@ -338,13 +356,16 @@ class gascondensate():
           m = m * max(y7) / max(x7) # denormalize the slope
           c = c * max(y7) # denormalize the intercept
 
+          ## calculate condensate-in-place
+          condensate_inplace = calculate_condensate_inplace(Gfgi, Rv)          
+
           ## plot the regression line
           x7_fit = np.linspace(min(x7), max(x7), 5)
           y7_fit = linear_with_intercept(x7_fit, m, c)
-          plt.plot(x7_fit, y7_fit, label='{} MMSCF'.format(np.round(Gfgi * 1E-6, 3)))
+          plt.plot(x7_fit, y7_fit, label='(G) {} MMSCF (C) {} MSTB'.format(np.round(Gfgi * 1E-6, 3), np.round(condensate_inplace * 1E-3, 3)))
           plt.legend()  
 
         plt.tight_layout(pad=1.5)
         plt.show()
 
-        return F, Eg, Efw    
+        return F, Eg, Efw  
