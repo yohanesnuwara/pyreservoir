@@ -248,13 +248,13 @@ class gascondensate():
 
         # Plot 2: p/z vs Gp
         plt.subplot(3,2,2)
+        plt.title('Plot 2: p/z vs Gp', size=title_size, pad=title_pad)
+        plt.xlabel('Gp (scf)')
+        plt.ylabel('p/z (psia)')
 
         if np.all(z==0) == False:        
           x2, y2 = Gp, (p / z)
           plt.plot(x2, y2, '.-')
-          plt.title('Plot 2: p/z vs Gp', size=title_size, pad=title_pad)
-          plt.xlabel('Gp (scf)')
-          plt.ylabel('p/z (psia)')
 
           ## curve-fitting to calculate the slope as OGIP
           x2_norm = x2 / max(x2) # normalize x
@@ -320,13 +320,13 @@ class gascondensate():
 
         # Plot 7: ((p/z)*(1-Efw)) vs Gp
         plt.subplot(3,2,5)
+        plt.title('Plot 7: ((p/z)*(1-Efw)) vs Gp', size=title_size, pad=title_pad)
+        plt.xlabel('Gp (scf)')
+        plt.ylabel('(p/z)*(1-Efw) (psia)')        
 
         if np.all(z==0) == False:
           x7, y7 = Gp, ((p / z) * (1 - Efw))
           plt.plot(x7, y7, '.-')
-          plt.title('Plot 7: ((p/z)*(1-Efw)) vs Gp', size=title_size, pad=title_pad)
-          plt.xlabel('Gp (scf)')
-          plt.ylabel('(p/z)*(1-Efw) (psia)')
 
           ## curve-fitting to calculate the slope as OGIP
           x7_norm = x7 / max(x7) # normalize x
