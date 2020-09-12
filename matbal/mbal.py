@@ -176,6 +176,7 @@ class gascondensate():
     """
     def calculate_params(self, p, pdew, Bg, Bo, Np, Gp, Gi, cf, cw, swi, Rs, Rv):
         """Calculate Material Balance Paramaters for Gas-Condensate Reservoir"""
+        import numpy as np
         pi = p[0]
         Rvi = Rv[0]
         Bgi = Bg[0]
@@ -206,6 +207,7 @@ class gascondensate():
 
     def plot(self, p, z, Gp, F, Btg, Efw, Eg):
         """Create Material Balance Plots for Dry-Gas Reservoir"""
+        import numpy as np
         import matplotlib.pyplot as plt
         from scipy.optimize import curve_fit
 
