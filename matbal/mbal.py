@@ -205,7 +205,7 @@ class gascondensate():
 
         return F, Btg, Efw, Eg
 
-    def plot(self, p, z, Gp, F, Btg, Efw, Eg):
+    def plot(self, p, z, Gp, F, Btg, Efw, Eg, Rv):
         """Create Material Balance Plots for Dry-Gas Reservoir"""
         import numpy as np
         import matplotlib.pyplot as plt
