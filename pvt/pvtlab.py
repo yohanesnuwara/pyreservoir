@@ -1,3 +1,41 @@
+def linear_interpolate(p, p1, prop):
+  """
+  Linear interpolation to assign properties from PVT data to respective
+  reservoir pressures in production data
+
+  Input:
+
+  p = pressure in PVT data
+  p1 = pressure in production data
+  prop = property in PVT data to be interpolated to production data 
+         (has same array length as "p")
+
+  Output:
+
+  prop_interpolated = the interpolated property values for the production data
+  """
+  import numpy as np
+
+  prop_interpolated = []
+  for i in range(len(p1)):
+    for j,k in zip(range(1,len(p)), range(len(p)-1)):
+      if p1[i] < p[j-1] and p1[i] > p[k+1]:
+        # interpolating if value in prod data is between two values in the PVT data
+        prop_plus, p_plus = prop[j-1], p[j-1] 
+        prop_min, p_min = prop[k+1], p[k+1]
+        prop_int = ((p1[i] - p_min) * (prop_plus - prop_min) / (p_plus - p_min)) + prop_min
+        prop_interpolated.append(prop_int)
+      if p1[i] == p[j-1]:
+        # using the value in the PVT data if equals to value in the prod data
+        prop_int = prop[j-1]
+        prop_interpolated.append(prop_int)
+      if p1[i] == p[k+1]:
+        # using the value in the PVT data if equals to value in the prod data
+        prop_int = prop[k+1]
+        prop_interpolated.append(prop_int)
+  prop_interpolated = np.array(prop_interpolated)
+  return prop_interpolated
+
 def cvd_condensate(z, z2, temp, p, Gp, Np, Vo):
     """
     Calculate volatile oil-gas ratio of condensate from Constant-Volume Depletion (CVD) Study
