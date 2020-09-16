@@ -51,7 +51,7 @@ class saturated_nonvolatile_totaloil():
 def energy_plot(t, Idd, Isd, Ifd, Iwi):
   """Energy Plot of the Drive Indices"""
   import matplotlib.pyplot as plt
-  t = (df['date'].values)[1:]
+  t = t[1:]
   Idd_curve = Idd[1:]
   Isd_curve = Idd[1:] + Isd[1:]
   Ifd_curve = Idd[1:] + Isd[1:] + Ifd[1:]
