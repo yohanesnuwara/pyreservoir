@@ -1,3 +1,10 @@
+"""
+Programs for Processing PVT Lab Reports
+
+@author: Yohanes Nuwara
+@email: ign.nuwara97@gmail.com
+"""
+
 def linear_interpolate(p, p1, prop):
   """
   Linear interpolation to assign properties from PVT data to respective
