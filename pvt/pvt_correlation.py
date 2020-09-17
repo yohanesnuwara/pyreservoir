@@ -12,10 +12,10 @@ def gas_pseudoprops(temp, pressure, sg, x_h2s, x_co2):
   """
   Calculate Gas Pseudo-critical and Pseudo-reduced Pressure and Temperature
   * Pseudo-critical properties
-    0.57 < sg < 1.68
+    For range: 0.57 < sg < 1.68
     Sutton (1985)
   * Pseudo-reduced properties
-    x_h2s (mol%) < 0.738; x_co2 (mol%) < 0.544; 154 < p (psia) < 7026; 40 < temp (°F) < 300 (error 0.97%)
+    For range: x_h2s (mol%) < 0.738; x_co2 (mol%) < 0.544; 154 < p (psia) < 7026; 40 < temp (°F) < 300 (error 0.97%)
     Wichert and Aziz (1972)
   """
   import numpy as np
@@ -39,7 +39,7 @@ def gas_pseudoprops(temp, pressure, sg, x_h2s, x_co2):
 def gas_zfactor(T_pr, P_pr):
   """
   Calculate Gas Compressibility Factor
-  0.2 < P_pr < 30; 1 < T_pr < 3 (error 0.486%)
+  For range: 0.2 < P_pr < 30; 1 < T_pr < 3 (error 0.486%)
   Dranchuk-Aboukassem (1975)
   """
   # T_pr : calculated pseudoreduced temperature
@@ -73,6 +73,7 @@ def gas_density(temp, pressure, sg, z):
 def gas_fvf(z, temp, pressure):
   """
   Calculate Gas FVF
+  For range: this is not a correlation, so valid for infinite intervals
   """
   temp = temp + 459.67
   Bg = 0.0282793 * z * temp / pressure 
@@ -94,7 +95,7 @@ def gas_mu(temp, rhogas, sg):
   """
   Calculate Gas Viscosity 
   For gas with CO2 and N2 composition
-  100 < temp (°F) < 340; 0.9 < x_CO2 (mol%) < 3.2; x_N2 (mol%) < 4.8 (std 2.7-9.0%)
+  For range: 100 < temp (°F) < 340; 0.9 < x_CO2 (mol%) < 3.2; x_N2 (mol%) < 4.8 (std 2.7-9.0%)
   (Lee et al, 1996)
   """
   import numpy as np
@@ -108,6 +109,11 @@ def gas_mu(temp, rhogas, sg):
   return viscogas
 
 def gas_compressibility(T_pr, P_pr, rho_pr, z, P_pc):
+  """
+  Calculate Gas Isothermal Compressibility
+  For range: unspecified
+  Trube (1957); Mattar (1975)
+  """
   import numpy as np
 
   a1 = 0.3265; a2 = -1.0700; a3 = -0.5339; a4 = 0.01569; a5 = -0.05165; a6 = 0.5475
