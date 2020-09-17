@@ -10,7 +10,13 @@ GAS
 
 def gas_pseudoprops(temp, pressure, sg, x_h2s, x_co2):
   """
-  Temperature in Fahrenheit
+  Calculate Gas Pseudo-critical and Pseudo-reduced Pressure and Temperature
+  * Pseudo-critical properties
+    0.57 < sg < 1.68
+    Sutton (1985)
+  * Pseudo-reduced properties
+    x_h2s (mol%) < 0.738; x_co2 (mol%) < 0.544; 154 < p (psia) < 7026; 40 < temp (°F) < 300 (error 0.97%)
+    Wichert and Aziz (1972)
   """
   import numpy as np
   temp = temp + 459.67 # convert to Rankine
@@ -32,6 +38,8 @@ def gas_pseudoprops(temp, pressure, sg, x_h2s, x_co2):
 
 def gas_zfactor(T_pr, P_pr):
   """
+  Calculate Gas Compressibility Factor
+  0.2 < P_pr < 30; 1 < T_pr < 3 (error 0.486%)
   Dranchuk-Aboukassem (1975)
   """
   # T_pr : calculated pseudoreduced temperature
@@ -64,8 +72,7 @@ def gas_density(temp, pressure, sg, z):
 
 def gas_fvf(z, temp, pressure):
   """
-  Gas FVF calculated in oilfield unit, result in res ft3/scf
-  inputs temp in Fahrenheit, pressure in psia or psig
+  Calculate Gas FVF
   """
   temp = temp + 459.67
   Bg = 0.0282793 * z * temp / pressure 
@@ -85,7 +92,10 @@ def gas_fvf2(unit='unit1', z=0.8, temp=186, pressure=2000):
 
 def gas_mu(temp, rhogas, sg):
   """
-  Temperature in Rankine
+  Calculate Gas Viscosity 
+  For gas with CO2 and N2 composition
+  100 < temp (°F) < 340; 0.9 < x_CO2 (mol%) < 3.2; x_N2 (mol%) < 4.8 (std 2.7-9.0%)
+  (Lee et al, 1996)
   """
   import numpy as np
   temp = temp + 459.67
