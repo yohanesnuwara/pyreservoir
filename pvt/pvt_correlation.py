@@ -289,15 +289,14 @@ def oil_compressibility(pressure2, P_bubble, temp2, api, Rsb, sg2):
   return coil
 
 
-def gasoilratio(pressure2, P_bubble, sg2, api, temp2):
+def gasoilratio(pressure2, P_bubble, sg2, api, temp2, Rsb):
   """
   Calculate Solution Gas-Oil Ratio in Oil Phase
   * Below Bubble-Point
     For range: unspecified
     (Vazquez and Beggs, 1980)
   * At and Above Bubble-Point 
-    is constant 
-    Approach used here: Using Vazquez and Beggs (1980) to calculate Rs at bubble-point pressure
+    Rs equals to Rs @ bubble-point pressure
   """
   import numpy as np
   Rs_array = []
@@ -316,18 +315,8 @@ def gasoilratio(pressure2, P_bubble, sg2, api, temp2):
     
   if pressure2 >= P_bubble:
     # Because Rs will be constant above BB
-    pressure2 = P_bubble
-    # Calculate with Vazquez and Beggs
-    if api <=30:
-      c1 = 0.0362
-      c2 = 1.0937
-      c3 = 25.7240
-    if api > 30:
-      c1 = 0.0178
-      c2 = 1.187
-      c3 = 23.9310
-    Rs = (pressure2**c2) * c1 * sg2 * np.exp((c3 * api) / (temp2 + 459.67))     
-
+    Rs = Rsb
+    
   return Rs
 
 """
