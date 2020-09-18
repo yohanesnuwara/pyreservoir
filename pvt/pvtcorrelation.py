@@ -264,7 +264,7 @@ def oil_mu(pressure2, P_bubble, sg2, api, temp2, Rs):
   if pressure2 > P_bubble:
     # validity check
     # 126 < p (psia) < 9,500; 0.511 < sg < 1.351; 15.3 < api < 59.5; range temp unspecified; 9.3 < Rs (scf/STB) < 2199
-    if pressure2 > 126 and pressure2 < 9500 and sg > 0.511 and sg < 1.351 and api > 15.3 and api < 59.5 and Rs > 9.3 and Rs < 2199: 
+    if pressure2 > 126 and pressure2 < 9500 and sg2 > 0.511 and sg2 < 1.351 and api > 15.3 and api < 59.5 and Rs > 9.3 and Rs < 2199: 
       if api <=30:
         c1 = 0.0362
         c2 = 1.0937
