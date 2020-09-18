@@ -159,7 +159,7 @@ def oil_pbubble(Rsb, sg2, api, temp2):
   """
   import numpy as np
 
-  if Rsb > 20 and Rsb < 2070 and sg > 0.56 and sg < 1.18 and api > 16 and api < 58 and temp > 70 and temp < 295:
+  if Rsb > 20 and Rsb < 2070 and sg2 > 0.56 and sg2 < 1.18 and api > 16 and api < 58 and temp2 > 70 and temp2 < 295:
     # c1, c2, c3 coefficient from Vazquez-Beggs
     if api <=30:
       c1 = 0.0362
