@@ -199,7 +199,7 @@ def oil_fvf(P_bubble, api, Rsb, sg2, temp2, pressure2):
 
   return Bo
   
-def oil_mu(pressure2, P_bubble, sg2, api, temp2, Rsb):
+def oil_mu(pressure2, P_bubble, sg2, api, temp2, Rs):
   """
   Calculate Oil Viscosity
   * Below and at bubble-point pressure
@@ -228,7 +228,6 @@ def oil_mu(pressure2, P_bubble, sg2, api, temp2, Rsb):
     # valid for: 0 < pressure < 5250 psig, 70 < temp < 295 F, 20 < Rs < 2070 scf/STB, 16 < api < 58 API 
     x = (temp2**(-1.163)) * np.exp(6.9824 - (0.04658 * api))
     mu_dead_oil = 10**x - 1
-    Rs = (pressure2**c2) * c1 * sg2 * np.exp((c3 * api) / (temp2 + 459.67)) # gas-oil ratio at any pressure BELOW BUBBLEPOINT using Vazquez-Beggs
     a = 10.715 * ((Rs + 100)**(-0.515))
     b = 5.44 * ((Rs + 150)**(-0.338))
     mu_live_oil = a * (mu_dead_oil**b)
@@ -250,9 +249,8 @@ def oil_mu(pressure2, P_bubble, sg2, api, temp2, Rsb):
     x_bubble = (temp2**(-1.163)) * np.exp(6.9824 - (0.04658 * api))
     mu_dead_oil_bubble = 10**x_bubble - 1
     
-    Rsb = (P_bubble**c2) * c1 * sg2 * np.exp((c3 * api) / (temp2 + 459.67)) # gas-oil ratio at any pressure BELOW BUBBLEPOINT using Vazquez-Beggs
-    a_bubble = 10.715 * ((Rsb + 100)**(-0.515))
-    b_bubble = 5.44 * ((Rsb + 150)**(-0.338))
+    a_bubble = 10.715 * ((Rs + 100)**(-0.515))
+    b_bubble = 5.44 * ((Rs + 150)**(-0.338))
     
     mu_live_oil_bubble = a_bubble * (mu_dead_oil_bubble**b_bubble)
 
