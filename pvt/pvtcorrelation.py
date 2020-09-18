@@ -401,7 +401,7 @@ def water_compressibility(temp, p, s, Bw):
   * Above BB point, for range: unspecified
     McCain (1989)
   """
-  import gas_fvf, water_pbubble
+#   import gas_fvf, water_pbubble
   
   # calculate bubble-point pressure
   pbubble = water_pbubble(temp)
