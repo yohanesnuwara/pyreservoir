@@ -297,7 +297,7 @@ def gasoilratio(pressure2, P_bubble, sg2, api, temp2):
     (Vazquez and Beggs, 1980)
   * At and Above Bubble-Point 
     is constant 
-    Approach used here: Using Vazquez and Beggs (1980) to calculate Rs at pressure SLIGHTLY BELOW bubble-point (Pb-0.0001)
+    Approach used here: Using Vazquez and Beggs (1980) to calculate Rs at bubble-point pressure
   """
   import numpy as np
   Rs_array = []
@@ -315,8 +315,8 @@ def gasoilratio(pressure2, P_bubble, sg2, api, temp2):
     Rs = (pressure2**c2) * c1 * sg2 * np.exp((c3 * api) / (temp2 + 459.67)) 
     
   if pressure2 >= P_bubble:
-    # Tweaking the P_bubble, subtract it with miniscule number 0.001
-    pressure2 = P_bubble - 0.001
+    # Because Rs will be constant above BB
+    pressure2 = P_bubble
     # Calculate with Vazquez and Beggs
     if api <=30:
       c1 = 0.0362
