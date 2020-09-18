@@ -13,10 +13,10 @@ def gas_pseudoprops(temp, pressure, sg, x_h2s, x_co2):
   Calculate Gas Pseudo-critical and Pseudo-reduced Pressure and Temperature
   * Pseudo-critical properties
     For range: 0.57 < sg < 1.68
-    Sutton (1985)
+    (Sutton, 1985)
   * Pseudo-reduced properties
     For range: x_h2s (mol%) < 0.738; x_co2 (mol%) < 0.544; 154 < p (psia) < 7026; 40 < temp (°F) < 300 (error 0.97%)
-    Wichert and Aziz (1972)
+    (Wichert and Aziz, 1972)
   """
   import numpy as np
   temp = temp + 459.67 # convert to Rankine
@@ -40,7 +40,7 @@ def gas_zfactor(T_pr, P_pr):
   """
   Calculate Gas Compressibility Factor
   For range: 0.2 < P_pr < 30; 1 < T_pr < 3 (error 0.486%)
-  Dranchuk-Aboukassem (1975)
+  (Dranchuk and Aboukassem, 1975)
   """
   # T_pr : calculated pseudoreduced temperature
   # P_pr : calculated pseudoreduced pressure   
@@ -112,7 +112,7 @@ def gas_compressibility(T_pr, P_pr, rho_pr, z, P_pc):
   """
   Calculate Gas Isothermal Compressibility
   For range: unspecified
-  Trube (1957); Mattar (1975)
+  (Trube, 1957; Mattar, 1975)
   """
   import numpy as np
 
@@ -133,6 +133,11 @@ OIL
 """
 
 def oil_pbubble(Rsb, sg2, api, temp2):
+  """
+  Calculate Oil Bubble-Point Pressure
+  For range: 20 < Rsb (scf/STB) < 2,070; 0.56 < sg < 1.18; 16 < api < 58; 70 < temp (°F) < 295 (err=0.7%)
+  (Vazquez and Beggs, 1980)
+  """
   import numpy as np
   # c1, c2, c3 coefficient from Vazquez-Beggs
   if api <=30:
@@ -148,6 +153,15 @@ def oil_pbubble(Rsb, sg2, api, temp2):
   return(P_bubble_vaz)
 
 def oil_fvf(P_bubble, api, Rsb, sg2, temp2, pressure2):
+  """
+  Calculate Oil FVF
+  * Above bubble-point pressure
+    For range: unspecified
+    (Vazquez and Beggs, 1980)
+  * At and bubble-point pressure
+    For range: unspecified
+    (Levitan and Murtha, 1999)
+  """
 
   import numpy as np
   # FVF of oil at bubblepoint pressure using Levitan-Murtha
@@ -178,13 +192,23 @@ def oil_fvf(P_bubble, api, Rsb, sg2, temp2, pressure2):
     # use Levitan-Murtha
     Bo = Bo_bubble
   if pressure2 > P_bubble:
-    # use Levitan-Murtha
+    # Calculate oil compressibility first using Levitan-Murtha
     coil = ((5 * Rsb) + (17.2 * temp2) - (1180 * sg2) + (12.61 * api) - 1433) / (1E+05 * pressure2)
+    # Calculate Bo using Levitan-Murtha
     Bo = Bo_bubble * np.exp(coil * (P_bubble - pressure2))
 
   return Bo
   
 def oil_mu(pressure2, P_bubble, sg2, api, temp2, Rsb):
+  """
+  Calculate Oil Viscosity
+  * Below and at bubble-point pressure
+    For range: 0 < p (psia) < 5,250; range sg unspecified; 16 < api < 58; 70 < temp (°F) < 295; 20 < Rs (scf/STB) < 2,070 (err=1.83%)
+    (Beggs and Robinson, 1975; Chew and Connally, 1959)
+  * Above bubble-point pressure
+    For range: 126 < p (psia) < 9,500; 0.511 < sg < 1.351; 15.3 < api < 59.5; range temp unspecified; 9.3 < Rs (scf/STB) < 2199 (err=7.54%)
+    (Vazquez and Beggs, 1980)
+  """
   # Calculate viscosity of oil
   import numpy as np
 
@@ -225,9 +249,11 @@ def oil_mu(pressure2, P_bubble, sg2, api, temp2, Rsb):
     # compute oil viscosity at bubblepoint first
     x_bubble = (temp2**(-1.163)) * np.exp(6.9824 - (0.04658 * api))
     mu_dead_oil_bubble = 10**x_bubble - 1
+    
     Rsb = (P_bubble**c2) * c1 * sg2 * np.exp((c3 * api) / (temp2 + 459.67)) # gas-oil ratio at any pressure BELOW BUBBLEPOINT using Vazquez-Beggs
     a_bubble = 10.715 * ((Rsb + 100)**(-0.515))
     b_bubble = 5.44 * ((Rsb + 150)**(-0.338))
+    
     mu_live_oil_bubble = a_bubble * (mu_dead_oil_bubble**b_bubble)
 
     m = 2.6 * (pressure2**1.187) * np.exp(-11.513 - (8.98E-05 * pressure2))
@@ -236,6 +262,15 @@ def oil_mu(pressure2, P_bubble, sg2, api, temp2, Rsb):
   return mu_live_oil
 
 def oil_compressibility(pressure2, P_bubble, temp2, api, Rsb, sg2):
+  """
+  Calculate Oil Isothermal Compressibility
+  * Below bubble-point pressure
+    For range: unspecified
+    (McCain, 1988)
+  * Above and at bubble-point pressure
+    For range: unspecified
+    (Vazquez and Beggs, 1980)
+  """
   import numpy as np
   from math import e
 
@@ -254,11 +289,21 @@ def oil_compressibility(pressure2, P_bubble, temp2, api, Rsb, sg2):
   return coil
 
 
-def gasoilratio(pressure2, P_bubble, sg2, api, temp2, Rsb):
+def gasoilratio(pressure2, P_bubble, sg2, api, temp2):
+  """
+  Calculate Solution Gas-Oil Ratio in Oil Phase
+  * Below Bubble-Point
+    For range: unspecified
+    (Vazquez and Beggs, 1980)
+  * At and Above Bubble-Point 
+    is constant 
+    Approach used here: Using Vazquez and Beggs (1980) to calculate Rs at pressure SLIGHTLY BELOW bubble-point (Pb-0.0001)
+  """
   import numpy as np
   Rs_array = []
 
   if pressure2 < P_bubble:
+    # Using Vazquez and Beggs
     if api <=30:
       c1 = 0.0362
       c2 = 1.0937
@@ -267,11 +312,21 @@ def gasoilratio(pressure2, P_bubble, sg2, api, temp2, Rsb):
       c1 = 0.0178
       c2 = 1.187
       c3 = 23.9310
-
-    Rsc = (pressure2**c2) * c1 * sg2 * np.exp((c3 * api) / (temp2 + 459.67)) # gas-oil ratio at any pressure BELOW BUBBLEPOINT using Vazquez-Beggs
-    Rs = Rsc
+    Rs = (pressure2**c2) * c1 * sg2 * np.exp((c3 * api) / (temp2 + 459.67)) 
+    
   if pressure2 >= P_bubble:
-    Rs = Rsb
+    # Tweaking the P_bubble, subtract it with miniscule number 0.001
+    pressure2 = P_bubble - 0.001
+    # Calculate with Vazquez and Beggs
+    if api <=30:
+      c1 = 0.0362
+      c2 = 1.0937
+      c3 = 25.7240
+    if api > 30:
+      c1 = 0.0178
+      c2 = 1.187
+      c3 = 23.9310
+    Rs = (pressure2**c2) * c1 * sg2 * np.exp((c3 * api) / (temp2 + 459.67))     
 
   return Rs
 
