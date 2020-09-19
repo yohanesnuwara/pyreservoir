@@ -11,6 +11,10 @@ Python utilities for reservoir engineering calculations
 * Material balance `matbal`
 * Decline curve analysis `dca`
 
+## Tutorials
+
+See these tutorial [Jupyter notebooks](https://github.com/yohanesnuwara/pyreservoir/tree/master/notebooks) to get started with each of the libraries. See inside [this folder](https://github.com/yohanesnuwara/pyreservoir/tree/master/data) to get the datasets used for the tutorials. 
+
 ## License
 
 I consider the goodness of open-source program but I strongly recommend that anyone who wish to use any program in this package to consider the code authorship. This work is licensed with Creative Commons BY-NC-ND 4.0 International. 
