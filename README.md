@@ -11,16 +11,6 @@ Python utilities for reservoir engineering calculations
 * Material balance `matbal`
 * Decline curve analysis `dca`
 
-## MBAL for dry-gas (DG) and gas-condensate (GC)
-
-**Differences and similarities of variables**
-
-|**Variables**|**DG** & **GC above dew-point**|**GC below dew-point**|
-|:--:|:--:|:--:|
-|Reservoir voidage (<img src="https://render.githubusercontent.com/render/math?math=F">)|<img src="https://render.githubusercontent.com/render/math?math=F=G_pB_g">|<img src="https://render.githubusercontent.com/render/math?math=F=[N_p(\frac{B_o-R_sB_g}{1-R_vR_s})]+[(G_p-G_i)(\frac{B_g-R_vB_o}{1-R_vR_s})]">|
-|Total gas FVF (<img src="https://render.githubusercontent.com/render/math?math=B_{tg}">)|<img src="https://render.githubusercontent.com/render/math?math=B_{tg}=B_g">|<img src="https://render.githubusercontent.com/render/math?math=B_{tg}=\frac{B_g(1-R_vR_{vi})+(R_{vi}-R_v)B_o}{1-R_vR_s}">|
-|Gas expansion factor (<img src="https://render.githubusercontent.com/render/math?math=E_g">)|<img src="https://render.githubusercontent.com/render/math?math=E_g=B_{tg}-B_{gi}">|<img src="https://render.githubusercontent.com/render/math?math=E_g=B_{tg}-B_{gi}">|
-
 ## License
 
 I consider the goodness of open-source program but I strongly recommend that anyone who wish to use any program in this package to consider the code authorship. This work is licensed with Creative Commons BY-NC-ND 4.0 International. 
