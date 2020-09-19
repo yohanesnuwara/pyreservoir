@@ -6,10 +6,18 @@ Python utilities for reservoir engineering calculations
 </div>
 
 * PVT analysis `pvt`
-* Volumetric mapping `pyvolumetric`
+* Volumetric mapping `volumetric`
 * Well-test analysis `welltest`
 * Material balance `matbal`
 * Decline curve analysis `dca`
+
+## Applications
+
+* `pvt`: Obtaining PVT properties using PVT correlation (`pvtcorrelation`); Processing PVT lab experiments such as DL, CCE, Flash Analysis, and CVD (`pvtlab`)
+* `volumetric`: Computing OOIP and OGIP using volumetric trapezoidal (`trapezoidal`), pyramidal (`pyramidal`), and Simpson's 1/3 rule (`simpson`)
+* `welltest`
+* `matbal`: Computing aquifer influx into a reservoir using Schilthuis (`schilthuis`), van Everdingen-Hurst (`veh`), and Fetkovich (`fetkovich`) methods; Material balance plots for OOIP and OGIP verification for gas and oil reservoirs; Computing reservoir drive indices and producing energy plots (`drives`)
+* `dca`: Computing decline-curve parameters from Arps 
 
 ## Tutorials
 
