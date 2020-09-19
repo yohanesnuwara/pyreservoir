@@ -6,17 +6,17 @@ Python utilities for reservoir engineering calculations
 </div>
 
 * PVT analysis `pvt`
-* Volumetric mapping `volumetric`
+* Volumetric mapping `volumetrics`
 * Well-test analysis `welltest`
 * Material balance `matbal`
 * Decline curve analysis `dca`
 
 ## Applications
 
-* `pvt`: Obtaining PVT properties using PVT correlation (`pvtcorrelation`); Processing PVT lab experiments such as DL, CCE, Flash Analysis, and CVD (`pvtlab`)
-* `volumetric`: Computing OOIP and OGIP using volumetric trapezoidal (`trapezoidal`), pyramidal (`pyramidal`), and Simpson's 1/3 rule (`simpson`)
+* `pvt`: Obtaining PVT properties using PVT correlation ([`pvtcorrelation`](https://github.com/yohanesnuwara/pyreservoir/blob/master/pvt/pvtcorrelation.py)); Processing PVT lab experiments such as DL, CCE, Flash Analysis, and CVD ([`pvtlab`](https://github.com/yohanesnuwara/pyreservoir/blob/master/pvt/pvtlab.py))
+* `volumetrics`: Computing OOIP and OGIP using volumetric trapezoidal, pyramidal, and Simpson's 1/3 rule ([`volumetrics`](https://github.com/yohanesnuwara/pyreservoir/blob/master/volumetrics/volumetrics.py))
 * `welltest`
-* `matbal`: Computing aquifer influx into a reservoir using Schilthuis (`schilthuis`), van Everdingen-Hurst (`veh`), and Fetkovich (`fetkovich`) methods; Material balance plots for OOIP and OGIP verification for gas and oil reservoirs; Computing reservoir drive indices and producing energy plots (`drives`)
+* `matbal`: Computing aquifer influx into a reservoir using Schilthuis, van Everdingen-Hurst, and Fetkovich methods ([`aquifer`](https://github.com/yohanesnuwara/pyreservoir/blob/master/matbal/aquifer.py)); Material balance plots for OOIP and OGIP verification for gas and oil reservoirs ([`mbal`](https://github.com/yohanesnuwara/pyreservoir/blob/master/matbal/mbal.py)); Computing reservoir drive indices and producing energy plots ([`drives`](https://github.com/yohanesnuwara/pyreservoir/blob/master/matbal/drives.py))
 * `dca`: Computing decline-curve parameters from Arps 
 
 ## Tutorials
