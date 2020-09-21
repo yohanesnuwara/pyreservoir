@@ -217,3 +217,147 @@ class veh():
             We_veh.append(float(We))
 
         return We_veh    
+
+class mbal():
+    def calculate_sigma_We(self, datetime, pressure, cf, cw, perm, poro, mu_w, r_R):
+        """Calculate ∑ WeD * Δpj as a parameter for Material Balance"""
+        import numpy as np
+
+        def time_pressure_difference(datetime):
+            """Calculate time and pressure differences"""
+
+            # Subtracting datetimes to get time differences from initial production date to date[i] (how many days) IN INTEGER
+            diff = datetime - datetime[0]
+
+            # convert datetime format to integer
+            time_array = []
+            for k in range(len(diff)):
+                diffr = diff[k] / np.timedelta64(1, 'D')
+                time_array.append(float(diffr))
+
+            # convert time difference from day to hour
+            time_array = np.array(time_array) * 24
+
+            # create j index for dataframe
+            j_index = np.arange(0, (len(datetime)), 1)
+
+            # calculate delta_pressure for each date
+            # append an array consists of two initial pressures [pi, pi] (as dummy) to the pressure data
+            pi = pressure[0]
+
+            p_dummy = np.append(np.array([pi, pi]), pressure)
+            delta_p_j = [b - a for a, b in zip(p_dummy[:-2], p_dummy[2:])]
+            delta_p_j = 0.5 * np.array(np.abs(delta_p_j))
+
+            # pre-processing
+            j_array = np.arange(1, (len(time_array) + 1), 1)
+            delta_p_j_array = delta_p_j[1:]
+
+            array_j = []
+            array_time = []
+            delta_pressure = []
+            array_time_repeat = []
+
+            for i in range(len(time_array)):
+                new_j = j_array[:i]
+                new_time = time_array[:i]
+                new_delta_p_j = delta_p_j_array[:i]
+
+                array_j.append(new_j)
+                array_time.append(new_time)
+                delta_pressure.append(new_delta_p_j)
+
+                # make arrays of repeated times
+                new_time_repeat = np.repeat((time_array[i]), i)
+                array_time_repeat.append(new_time_repeat)
+
+            # To calculate delta_time, SUBTRACT arrr_time TO arrr_time_repeat
+            delta_time = np.subtract(array_time_repeat, array_time)  # numpy subtract array to array
+
+            return delta_time, delta_pressure
+
+
+        def calculate_parameter_VEH(index, delta_time, cf, cw, perm, poro, mu_w, r_R):
+            """Calculate dimensionless time (t_DR) and dimensionless aquifer influx (W_eD)"""
+
+            # Calculate t_DR and W_eD
+            ct = cf + cw
+            t_DR_factor = (0.0002637 * perm) / (poro * mu_w * ct * (r_R ** 2))
+
+            t_DR_arr = []
+            W_eD_arr = []
+
+            for i in range(len(delta_time[index])):
+                t_DR = t_DR_factor * (delta_time[index])[i]
+
+                "calculate W_eD using Eq 6.36 and 6.37 for infinite reservoir (See: 6_examples_part2.ipynb)"
+                if t_DR > 0.01 and t_DR <= 200:
+                    # use Eq 6.36
+                    W_eD = ((1.12838 * np.sqrt(t_DR)) + (1.19328 * t_DR) + (0.269872 * t_DR * np.sqrt(t_DR)) + (
+                                0.00855294 * (t_DR ** 2))) / (1 + (0.616599 * np.sqrt(t_DR) + (0.0413008 * t_DR)))
+                if t_DR > 200:
+                    # use Eq 6.37
+                    W_eD = ((2.02566 * t_DR) - 4.29881) / np.log(t_DR)
+
+                W_eD_arr.append(float(W_eD))
+                t_DR_arr.append(float(t_DR))
+
+            return (t_DR_arr, W_eD_arr)
+
+        # Calculate time differences
+        delta_time, delta_pressure = time_pressure_difference(datetime)
+
+        # Calculate aquifer influx
+        sigma_We = []
+
+        for x in range(len(datetime)):  # range from j index 1 to 9
+
+            t_DR_arr, W_eD_arr = calculate_parameter_VEH(x, delta_time, cf, cw, perm, poro, mu_w, r_R)  # call function
+
+            # calculate We, Equation 8.7
+            W_eD_multipy_delta_p_j = delta_pressure[x] * W_eD_arr
+            sigma_We_ = np.sum(W_eD_multipy_delta_p_j)
+
+            sigma_We.append(sigma_We_)
+
+        return sigma_We
+
+    def undersaturated(self, sigma_We, Bo, Bw, Wp, F, Efw, Eo):
+        """
+        Calculate X and Y axis of Undersaturated Oil Material Balance Plot
+        to determine B' (aquifer constant) and OOIP
+        """
+        Boi = Bo[0]
+        axisx = sigma_We / (Eo + (Boi * Efw))
+        axisy = (F + (Bw * Wp)) / (Eo + (Boi * Efw))
+        return axisx, axisy
+
+    def saturated(self, sigma_We, Bo, Bg, Bw, Wp, F, Efw, Eo, Eg):
+        """
+        Calculate P, Q, R, and S variables of Saturated Oil Material Balance Plot
+        to determine B' (aquifer constant), OOIP, and OGIP
+
+        P, Q, R, S are variables explained in the Guide
+
+        Material balance equation is: S = (R * Nfoi) + (Q * Gfgi) + (P * B')
+
+        """
+        Boi = Bo[0]
+        Bgi = Bg[0]
+
+        P = sigma_We
+        Q = Eg + Bgi * Efw
+        R = Eo + Boi * Efw
+        S = F + Bw * Wp
+
+        return P, Q, R, S
+
+    def gas(self, sigma_We, Bg, Bw, Wp, F, Efw, Eg):
+        """
+        Calculate X and Y axis of Gas (Dry Gas & Gas-Condensate) Balance Plot
+        to determine B' (aquifer constant) and OGIP
+        """
+        Bgi = Bg[0]
+        axisx = sigma_We / (Eg + (Bgi * Efw))
+        axisy = (F + (Bw * Wp)) / (Eg + (Bgi * Efw))
+        return axisx, axisy    
