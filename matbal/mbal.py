@@ -9,6 +9,8 @@ def initial_hydrocarbon_in_place(Nfoi, Gfgi, Rv, Rs):
   Calculate OOIP and OGIP from Nfoi and Gfgi
   And output the result to labels in the plot
   """
+  import matplotlib.patches as mpl_patches
+  
   Rvi, Rsi = Rv[0], Rs[0]
   OOIP = Nfoi + Gfgi * Rvi
   OGIP = Gfgi + Nfoi * Rsi
