@@ -429,7 +429,7 @@ class oil():
       m = (Gfgi * Bgi) / (Nfoi * Boi)
       return m
 
-    def plot(self, oil_type, F, Bto, Btg, Efw, Eo, Eg, Bo, Rs, Rv, figsize=(10,5)):
+    def plot(self, oil_type, F, Bto, Btg, Efw, Eo, Eg, Np, Bo, Rs, Rv, figsize=(10,5)):
       """
       Create Material Balance Plots for Oil Reservoir
       
