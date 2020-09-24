@@ -57,8 +57,8 @@ class drygas():
         import matplotlib.pyplot as plt
         from scipy.optimize import curve_fit
 
-        # no volatile component, define Rv as zeros
-        Rv = np.zeros(len(p))
+        # no volatile and vapor component, define Rv as zeros
+        Rv, Rs = np.zeros(len(p)), np.zeros(len(p))
 
         # plot attributes
         title_size = 12
@@ -269,12 +269,9 @@ class gascondensate():
         import numpy as np
         import matplotlib.pyplot as plt
         from scipy.optimize import curve_fit
-
-        def calculate_condensate_inplace(Gfgi, Rv):
-            """Calculate initial condensate-in-place from the calculated OGIP"""
-            Rvi = Rv[0]
-            condensate_inplace = Rvi * Gfgi # in STB
-            return condensate_inplace        
+        
+        # no vapor component, define Rs as zeros
+        Rs = np.zeros(len(p))
 
         # plot attributes
         title_size = 12
