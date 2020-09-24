@@ -306,9 +306,6 @@ class gascondensate():
         Nfoi = 0
         labels, handles, OOIP, OGIP = initial_hydrocarbon_in_place(Nfoi, Gfgi, Rv, Rs)         
 
-        ## calculate condensate-in-place
-        condensate_inplace = calculate_condensate_inplace(Gfgi, Rv)
-
         ## plot the regression line
         x1_fit = np.linspace(min(x1), max(x1), 5)
         y1_fit = linear_zero_intercept(x1_fit, Gfgi)
