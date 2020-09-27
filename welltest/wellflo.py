@@ -100,6 +100,7 @@ def simulate_multirate_test(p_initial, t_step, t_change, q_change,
   """
   import numpy as np
   import matplotlib.pyplot as plt
+  import matplotlib.patches as mpl_patches
 
   # produce time array
   t_end = t_change[-1]
@@ -185,6 +186,7 @@ def simulate_multipressure_test(p_initial, t_step, t_change, p_change,
   """
   import numpy as np
   import matplotlib.pyplot as plt
+  import matplotlib.patches as mpl_patches
 
   # produce time array
   t_end = t_change[-1]
