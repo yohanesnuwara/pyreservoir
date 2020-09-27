@@ -61,36 +61,36 @@ def rate_dimensionless(rD, tD):
         qD = np.nan
     return qD
   
-  def check_validity(solver='constant_rate', time='infinite', tmin=0.1, rw=0.5, re=1000, perm=100, poro=0.2, mu=2, ct=3E-6):
-    """Check validity of using the Approaches to Flow Solutions"""
-    import numpy as np
-    if solver == 'constant_rate':
-        if time == 'infinite':
-            # Infinite-acting solution for constant-rate (Towler, Eq. 6.20; from Lee, 1982)
-            rw_lim = np.sqrt((.0002637 * perm * tmin) / (100 * poro * mu * ct))
-            if rw < rw_lim:
-                print('valid')
-            else:
-                print('invalid')
-        if time == 'finite':
-            # Finite-acting solution for constant-rate (Towler, Eq. 6.19; from Lee, 1982)
-            rw_lim = np.sqrt((.0002637 * perm * tmin) / (25 * poro * mu * ct))
-            rD2 = (re / rw)**2
-            if rw < rw_lim and rD2 > 1:
-                print('valid')
-            else:
-                print('invalid')     
-    if solver == 'constant_pressure':
-        if time == 'infinite':
-            # Infinite-acting solution for constant-pressure (Towler, Eq. 6.42, 6.43; from Edwardson et al, 1962)
-            rw_lim = np.sqrt((.0002637 * perm * tmin) / (.01 * poro * mu * ct))
-            if rw < rw_lim:
-                print('valid')
-            else:
-                print('invalid')
-        if time == 'finite':
-            # Finite-acting solution for constant-pressure (Towler, Appendix A-4)
-            print('valid')      
+def check_validity(solver='constant_rate', time='infinite', tmin=0.1, rw=0.5, re=1000, perm=100, poro=0.2, mu=2, ct=3E-6):
+  """Check validity of using the Approaches to Flow Solutions"""
+  import numpy as np
+  if solver == 'constant_rate':
+      if time == 'infinite':
+          # Infinite-acting solution for constant-rate (Towler, Eq. 6.20; from Lee, 1982)
+          rw_lim = np.sqrt((.0002637 * perm * tmin) / (100 * poro * mu * ct))
+          if rw < rw_lim:
+              print('valid')
+          else:
+              print('invalid')
+      if time == 'finite':
+          # Finite-acting solution for constant-rate (Towler, Eq. 6.19; from Lee, 1982)
+          rw_lim = np.sqrt((.0002637 * perm * tmin) / (25 * poro * mu * ct))
+          rD2 = (re / rw)**2
+          if rw < rw_lim and rD2 > 1:
+              print('valid')
+          else:
+              print('invalid')     
+  if solver == 'constant_pressure':
+      if time == 'infinite':
+          # Infinite-acting solution for constant-pressure (Towler, Eq. 6.42, 6.43; from Edwardson et al, 1962)
+          rw_lim = np.sqrt((.0002637 * perm * tmin) / (.01 * poro * mu * ct))
+          if rw < rw_lim:
+              print('valid')
+          else:
+              print('invalid')
+      if time == 'finite':
+          # Finite-acting solution for constant-pressure (Towler, Appendix A-4)
+          print('valid')      
 
 def simulate_multirate_test(p_initial, t_step, t_change, q_change,
                             re, rw, perm, poro, mu, ct, Bo, h):
