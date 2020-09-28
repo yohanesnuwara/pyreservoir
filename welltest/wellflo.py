@@ -47,6 +47,9 @@ def rate_dimensionless(rD, tD):
     Calculate Dimensionless Rate from Constant Pressure Flow
     """
     import numpy as np
+    import pandas as pd
+    from scipy.interpolate import griddata
+    
     if tD < (0.25 * rD**2):
         # Infinite-acting solution for constant-rate (Towler, Eq. 6.42, 6.43; from Edwardson et al, 1962)
         if tD > 0.01 and tD < 200:
@@ -58,7 +61,16 @@ def rate_dimensionless(rD, tD):
 
     if tD > (0.25 * rD**2):
         # Finite-acting solution for constant-rate (Towler, Appendix A-4; from van Everdingen-Hurst table)
-        qD = np.nan
+        columns = ['rd', 'td', 'qd']
+        veh = pd.read_csv('/content/pyreservoir/welltest/Appendix A-4.csv', names=columns)
+        rd = veh['rd'].values
+        td = veh['td'].values
+        qd = veh['qd'].values
+
+        ## gridding and interpolation
+        data = np.stack((rd, td), axis=1)
+        qD = griddata(data, qd, [rD, tD], method='linear')
+
     return qD
   
 def check_validity(solver='constant_rate', time='infinite', tmin=0.1, rw=0.5, re=1000, perm=100, poro=0.2, mu=2, ct=3E-6):
