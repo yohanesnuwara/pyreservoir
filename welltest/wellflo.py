@@ -65,6 +65,7 @@ def rate_dimensionless(rD, tD):
     if tD > (0.25 * rD**2):
         # Finite-acting solution for constant-rate (Towler, Appendix A-4; from van Everdingen-Hurst table)
         qD = np.nan
+        qD = 2 / (np.log(tD) + .80907)
 #         columns = ['rd', 'td', 'qd']
 #         veh = pd.read_csv('/content/pyreservoir/welltest/Appendix A-4.csv', names=columns)
 #         rd = veh['rd'].values
