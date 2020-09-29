@@ -3,6 +3,9 @@ Modeling Single-Phase Flow in a Well Test
 
 @author: Yohanes Nuwara
 @email: ign.nuwara97@gmail.com
+
+Note: 
+The finite-acting time part of constant pressure solution is still not solved
 """
 
 def radius_dimensionless(re, rw):
@@ -61,15 +64,16 @@ def rate_dimensionless(rD, tD):
 
     if tD > (0.25 * rD**2):
         # Finite-acting solution for constant-rate (Towler, Appendix A-4; from van Everdingen-Hurst table)
-        columns = ['rd', 'td', 'qd']
-        veh = pd.read_csv('/content/pyreservoir/welltest/Appendix A-4.csv', names=columns)
-        rd = veh['rd'].values
-        td = veh['td'].values
-        qd = veh['qd'].values
+        qD = np.nan
+#         columns = ['rd', 'td', 'qd']
+#         veh = pd.read_csv('/content/pyreservoir/welltest/Appendix A-4.csv', names=columns)
+#         rd = veh['rd'].values
+#         td = veh['td'].values
+#         qd = veh['qd'].values
 
-        ## gridding and interpolation
-        data = np.stack((rd, td), axis=1)
-        qD = griddata(data, qd, [rD, tD], method='linear')
+#         ## gridding and interpolation
+#         data = np.stack((rd, td), axis=1)
+#         qD = griddata(data, qd, [rD, tD], method='linear')
 
     return qD
   
