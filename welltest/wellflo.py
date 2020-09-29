@@ -266,7 +266,7 @@ def simulate_multipressure_test(p_initial, t_step, t_change, p_change,
 
   ## plot BHFP
   plt.subplot(1,2,1)
-  plt.step(t, pwf, color='blue')
+  plt.step(t, pwf, color='red')
   plt.title('Well Flowing Pressure Profile', size=20, pad=15)
   plt.xlim(0, t_end)
   plt.ylim(ymax=max(pwf)+200)
@@ -279,7 +279,7 @@ def simulate_multipressure_test(p_initial, t_step, t_change, p_change,
   ## plot rate
   plt.subplot(1,2,2)
   # t = np.arange(len(pwf))
-  plt.plot(t, q, color='red')
+  plt.plot(t, q, color='blue')
   plt.title('Well Rate Profile', size=20, pad=15)
   plt.xlim(0, t_end)
   plt.xlabel('Time (hours)'); plt.ylabel('Rate (STB/D)')
