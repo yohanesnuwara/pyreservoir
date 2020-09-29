@@ -63,7 +63,7 @@ def rate_dimensionless(rD, tD):
           qD = ((2.02623 * tD * (np.log(tD) - 1)) + 3.90086) / (tD * ((np.log(tD))**2))
 
     if tD > (0.25 * rD**2):
-        # Finite-acting solution for constant-rate (Towler, Appendix A-4; from van Everdingen-Hurst table)
+        # Finite-acting solution for constant-rate (Towler, Eq. 7.32; from Jacob and Lohman, 1952)
         qD = np.nan
         qD = 2 / (np.log(tD) + .80907)
 #         columns = ['rd', 'td', 'qd']
