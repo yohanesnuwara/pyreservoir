@@ -387,7 +387,7 @@ def constant_rate_buildup_test(t, p, q, Bo, mu_oil, h, poro, ct, rw, t_since_shu
   # plt.gca().yaxis.tick_right()
   # plt.gca().yaxis.set_label_position("right")
 
-  plt.legend(handles1, labels1, loc='center right', fontsize='large', 
+  plt.legend(handles1, labels1, loc='best', fontsize='large', 
               fancybox=True, framealpha=0.7, 
               handlelength=0, handletextpad=0) 
 
