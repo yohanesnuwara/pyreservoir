@@ -347,8 +347,8 @@ def constant_rate_buildup_test(t, p, q, Bo, mu_oil, h, poro, ct, rw, t_since_shu
   plt.xlim(0,max(t))
 
   ## plot the separate WTR and ETR region
-  plt.axvspan(0, t[your_guess], color='green', alpha=0.3)
-  plt.axvspan(t[your_guess], max(t), color='yellow', alpha=0.3)
+  plt.axvspan(0, t[your_guess], color='blue', alpha=0.2)
+  plt.axvspan(t[your_guess], max(t), color='green', alpha=0.3)
 
   labels2 = []
   labels2.append("End of WTR Time = {} hours".format(np.round(t[your_guess], 3)))
@@ -369,7 +369,7 @@ def constant_rate_buildup_test(t, p, q, Bo, mu_oil, h, poro, ct, rw, t_since_shu
 
   ## plot the separate WTR and ETR region
   plt.axvspan(0, x[-your_guess], color='green', alpha=0.3)
-  plt.axvspan(x[-your_guess], 1E+25, color='yellow', alpha=0.3)
+  plt.axvspan(x[-your_guess], 1E+25, color='blue', alpha=0.2)
 
   # output calculated results to plot
   labels1 = []
