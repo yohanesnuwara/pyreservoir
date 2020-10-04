@@ -249,7 +249,7 @@ def constant_pressure_test(t, q, pwf, pi, Bo, mu_oil, h, poro, ct, rw):
   popt, pcov = curve_fit(linear, x, y)
   m, c = popt[0], popt[1]
 
-  plt.figure(figsize=(10,7))
+  plt.figure(figsize=(15,5))
 
   # calculate permeability
   k = permeability(Bo, mu_oil, h, m)
@@ -264,7 +264,17 @@ def constant_pressure_test(t, q, pwf, pi, Bo, mu_oil, h, poro, ct, rw):
   handles1 = [mpl_patches.Rectangle((0, 0), 1, 1, fc="white", ec="white", 
                                   lw=0, alpha=0)] * 2
 
+  # normal plot of q vs t
+  plt.subplot(1,2,1)
+  plt.plot(t, q, '.', color='black')
+  plt.title('Normal Plot of Rate vs Time', size=20, pad=10)
+  plt.xlabel('Time (hour)', size=17); plt.ylabel(r'Rate (STB/D)', size=17)  
+  plt.xlim(0, max(t))
+
+  plt.grid(True, which='both', color='black', linewidth=0.1)
+
   # plot semilog plot of 1/q vs t
+  plt.subplot(1,2,2)
   plt.semilogx(t, 1/q, '.', color='black')
   plt.title('Semilog Plot of Reciprocal Rate vs Time', size=20, pad=10)
   plt.xlabel('Time (hour)', size=17); plt.ylabel(r'$\frac{1}{q}$ (D/STB)', size=17)
@@ -279,5 +289,9 @@ def constant_pressure_test(t, q, pwf, pi, Bo, mu_oil, h, poro, ct, rw):
               handlelength=0, handletextpad=0) 
 
   plt.grid(True, which='both', color='black', linewidth=0.1)
-  plt.show() 
+
+  plt.tight_layout(1)
+  plt.show()  
+
+
   
