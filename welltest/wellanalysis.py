@@ -293,5 +293,103 @@ def constant_pressure_test(t, q, pwf, pi, Bo, mu_oil, h, poro, ct, rw):
   plt.tight_layout(1)
   plt.show()  
 
+def constant_rate_buildup_test(t, p, q, Bo, mu_oil, h, poro, ct, rw, t_since_shutin, your_guess):
+  """
+  Analyzing Constant Rate Buildup Well-test Result
+  """
+  import numpy as np
+  import matplotlib.pyplot as plt
+  from scipy.optimize import curve_fit
+  import matplotlib.patches as mpl_patches  
 
+  def permeability(q, Bo, mu_oil, h, m):
+    """Calculate permeability from Horner plot"""
+    return -(162.6 * q * Bo * mu_oil) / (m * h)
+
+  def skin_factor(t_since_shutin, pwf, k, poro, mu_oil, ct, rw, m, pi):
+    """
+    Calculate skin factor from Horner plot
+    Note: k and pi is the calculated permeability and initial pressure
+    """
+    b = pi + m1 * np.log10(t_since_shutin + 1)
+    return 1.1513 * (((pwf - b) / m1) - np.log10(k / (poro * mu_oil * ct * (rw**2))) + 3.2275) 
+
+  def linear(x, a, b):
+    return a * x + b
   
+  # Horner plotting parameters
+  delta_t = t - t[0]
+  x = (t_since_shutin + delta_t) / delta_t
+
+  " Analysis of Straight Line of Wellbore Storage Effect "
+
+  x_crop1, y_crop1 = np.log10(x[-your_guess:]), p[-your_guess:]
+  popt, pcov = curve_fit(linear, x_crop1, y_crop1)
+  m1, c1 = popt[0], popt[1]
+
+  # calculate permeability
+  k = permeability(q, Bo, mu_oil, h, m1)
+
+  # calculate initial reservoir pressure
+  pi = c1
+
+  # calculate skin factor
+  pwf = p[0]
+  s = skin_factor(t_since_shutin, pwf, k, poro, mu_oil, ct, rw, m1, pi)
+
+  # Horner buildup plot
+  plt.figure(figsize=(18,6))
+
+  plt.subplot(1,2,1)
+  plt.plot(t, p, '.', color='black')
+  plt.title('Normal Plot of BHFP vs Time', size=20, pad=10)
+  plt.xlabel('Time (hours)', size=17); plt.ylabel('Pressure (psia)', size=17)
+  plt.xlim(0,max(t))
+
+  ## plot the separate WTR and ETR region
+  plt.axvspan(0, t[your_guess], color='green', alpha=0.3)
+  plt.axvspan(t[your_guess], max(t), color='yellow', alpha=0.3)
+
+  labels2 = []
+  labels2.append("End of WTR Time = {} hours".format(np.round(t[your_guess], 3)))
+  handles2 = [mpl_patches.Rectangle((0, 0), 1, 1, fc="white", ec="white", 
+                                  lw=0, alpha=0)] * 1
+
+  plt.legend(handles2, labels2, loc='center right', fontsize='large', 
+              fancybox=True, framealpha=0.7, 
+              handlelength=0, handletextpad=0) 
+  plt.grid(True, which='both', color='black', linewidth=0.1)                                
+
+  plt.subplot(1,2,2)
+  plt.semilogx(x, p, '.', color='black')
+  plt.title('Semilog Plot of BHFP vs Horner Time', size=20, pad=10)
+  plt.xlabel(r'Horner time $(\frac{t_p+ \Delta t}{\Delta t})$', size=17) 
+  plt.ylabel(r'$p_{wf}$ (psia)', size=17)
+  plt.xlim(xmin=1)
+
+  ## plot the separate WTR and ETR region
+  plt.axvspan(0, x[-your_guess], color='green', alpha=0.3)
+  plt.axvspan(x[-your_guess], 1E+25, color='yellow', alpha=0.3)
+
+  # output calculated results to plot
+  labels1 = []
+  labels1.append("Calc. Permeability = {} md".format(np.round(k, 3)))
+  labels1.append("Calc. Initial Pressure = {} psia".format(np.round(pi, 3)))
+  labels1.append("Calc. Skin Factor = {}".format(np.round(s, 3)))
+  handles1 = [mpl_patches.Rectangle((0, 0), 1, 1, fc="white", ec="white", 
+                                  lw=0, alpha=0)] * 3
+
+  # plot regression line
+  y_fit = m1 * np.log10(x) + c1
+  plt.plot(x, y_fit, color='red', linewidth=0.8)
+
+  plt.gca().invert_xaxis()
+  # plt.gca().yaxis.tick_right()
+  # plt.gca().yaxis.set_label_position("right")
+
+  plt.legend(handles1, labels1, loc='center right', fontsize='large', 
+              fancybox=True, framealpha=0.7, 
+              handlelength=0, handletextpad=0) 
+
+  plt.grid(True, which='both', color='black', linewidth=0.1)
+  plt.show()  
