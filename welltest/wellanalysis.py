@@ -383,7 +383,7 @@ def constant_rate_buildup_test(t, p, q, Bo, mu_oil, h, poro, ct, rw, t_since_shu
   y_fit = m1 * np.log10(x) + c1
   plt.plot(x, y_fit, color='red', linewidth=0.8)
 
-  plt.gca().invert_xaxis()
+  # plt.gca().invert_xaxis()
   # plt.gca().yaxis.tick_right()
   # plt.gca().yaxis.set_label_position("right")
 
