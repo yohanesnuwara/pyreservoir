@@ -80,7 +80,7 @@ def constant_rate_drawdown_test(t, p, q, Bo, mu_oil, h, poro, ct, rw, pi, your_g
 
   # output all results to plot
   labels2 = []
-  labels2.append("End Time of ETR = {} hours".format(np.round(t[your_guess], 3)))
+  labels2.append("End Time of MTR = {} hours".format(np.round(t[your_guess], 3)))
   handles2 = [mpl_patches.Rectangle((0, 0), 1, 1, fc="white", ec="white", 
                                   lw=0, alpha=0)] * 1                                    
 
@@ -351,7 +351,7 @@ def constant_rate_buildup_test(t, p, q, Bo, mu_oil, h, poro, ct, rw, t_since_shu
   plt.axvspan(t[your_guess], max(t), color='green', alpha=0.3)
 
   labels2 = []
-  labels2.append("End of WTR Time = {} hours".format(np.round(t[your_guess], 3)))
+  labels2.append("End of ETR Time = {} hours".format(np.round(t[your_guess], 3)))
   handles2 = [mpl_patches.Rectangle((0, 0), 1, 1, fc="white", ec="white", 
                                   lw=0, alpha=0)] * 1
 
