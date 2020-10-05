@@ -33,9 +33,6 @@ def constant_rate_drawdown_test(t, p, q, Bo, mu_oil, h, poro, ct, rw, pi, your_g
   def linear(x, a, b):
     return a * x + b
 
-  # guess time index (input to user)
-  your_guess = 17
-
   " Analysis of MTR region to calculate permeability "
 
   t_crop1, p_crop1 = np.log(t[1:your_guess+1]), p[1:your_guess+1]
