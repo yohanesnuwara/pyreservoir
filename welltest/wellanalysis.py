@@ -340,7 +340,7 @@ def constant_rate_buildup_test(t, p, q, Bo, mu_oil, h, poro, ct, rw, t_since_shu
   plt.subplot(1,2,1)
   plt.plot(t, p, '.', color='black')
   plt.title('Normal Plot of BHFP vs Time', size=20, pad=10)
-  plt.xlabel('Time (hours)', size=17); plt.ylabel('Pressure (psia)', size=17)
+  plt.xlabel('Time since shut-in (hours)', size=17); plt.ylabel('Pressure (psia)', size=17)
   plt.xlim(0,max(t))
 
   ## plot the separate WTR and ETR region
@@ -348,9 +348,10 @@ def constant_rate_buildup_test(t, p, q, Bo, mu_oil, h, poro, ct, rw, t_since_shu
   plt.axvspan(t[your_guess], max(t), color='green', alpha=0.3)
 
   labels2 = []
+  labels2.append("Time @ shut-in = {} hours".format(np.round(t_since_shutin, 1)))  
   labels2.append("End of ETR Time = {} hours".format(np.round(t[your_guess], 3)))
   handles2 = [mpl_patches.Rectangle((0, 0), 1, 1, fc="white", ec="white", 
-                                  lw=0, alpha=0)] * 1
+                                  lw=0, alpha=0)] * 2
 
   plt.legend(handles2, labels2, loc='center right', fontsize='large', 
               fancybox=True, framealpha=0.7, 
