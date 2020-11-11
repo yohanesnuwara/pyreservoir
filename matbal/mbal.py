@@ -30,7 +30,12 @@ class drygas():
     Dry-Gas Material Balance Plot
     """
     def calculate_params(self, p, Bg, Gp, cf, cw, swi):
-        """Calculate Material Balance Paramaters for Dry-Gas Reservoir"""
+        """
+        Calculate Material Balance Paramaters for Dry-Gas Reservoir
+        
+        Output: F, Btg, Efw, Eg
+        
+        """
         import numpy as np
 
         pi = p[0]
@@ -234,7 +239,11 @@ class gascondensate():
     Gas-Condensate Material Balance Plot
     """
     def calculate_params(self, p, pdew, Bg, Bo, Np, Gp, Gi, cf, cw, swi, Rs, Rv):
-        """Calculate Material Balance Paramaters for Gas-Condensate Reservoir"""
+        """
+        Calculate Material Balance Paramaters for Gas-Condensate Reservoir
+        
+        Output: F, Btg, Efw, Eg
+        """
         import numpy as np
         pi = p[0]
         Rvi = Rv[0]
@@ -453,6 +462,8 @@ class oil():
     def calculate_params(self, p, Bo, Bg, Rv, Rs, Np, Gp, Gi, cf, cw, swi):
         """
         Calculate Material Balance Paramaters for Oil Reservoir
+        
+        Output: F, Bto, Btg, Efw, Eo, Eg
         """
         pi = p[0]
         Rsi = Rs[0]
