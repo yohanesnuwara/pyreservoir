@@ -5,7 +5,7 @@ Program for Well-test Result Analysis
 @email: ign.nuwara97@gmail.com
 """
 
-def constant_rate_drawdown_test(t, p, q, Bo, mu_oil, h, poro, ct, rw, pi, your_guess):
+def constant_rate_drawdown_test(t, p, q, Bo, mu_oil, h, poro, ct, rw, pi, your_guess=1):
   """
   Analyzing Constant-Rate Well-test Result
   Note: Make your initial guess of the data index where LTR and MTR separate
@@ -290,7 +290,7 @@ def constant_pressure_test(t, q, pwf, pi, Bo, mu_oil, h, poro, ct, rw):
   plt.tight_layout(1)
   plt.show()  
 
-def constant_rate_buildup_test(t, p, q, Bo, mu_oil, h, poro, ct, rw, t_since_shutin, your_guess):
+def constant_rate_buildup_test(t, p, q, Bo, mu_oil, h, poro, ct, rw, t_since_shutin, your_guess=1):
   """
   Analyzing Constant Rate Buildup Well-test Result
   """
