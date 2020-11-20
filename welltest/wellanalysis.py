@@ -290,7 +290,7 @@ def constant_pressure_test(t, q, pwf, pi, Bo, mu_oil, h, poro, ct, rw):
   plt.tight_layout(1)
   plt.show()  
 
-def constant_rate_buildup_test(t, p, q, Bo, mu_oil, h, poro, ct, rw, t_since_shutin, your_guess=1):
+def constant_rate_buildup_test(t, p, q, Bo, mu_oil, h, poro, ct, rw, t_since_shutin, your_guess=5):
   """
   Analyzing Constant Rate Buildup Well-test Result
   """
