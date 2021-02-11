@@ -37,7 +37,7 @@ def constant_terminal_rate(time, distance, re, rw, pi, q, poro, ct, k, h, mu_oil
   from scipy.special import expi
   
   # Access Ei-function table
-  Ei_table = np.loadtxt("https://raw.githubusercontent.com/yohanesnuwara/pyreservoir/master/fluid-flow/Ei_table.txt")
+  Ei_table = np.loadtxt("https://raw.githubusercontent.com/yohanesnuwara/pyreservoir/master/fluid_flow/Ei_table.txt")
   
   r = rw + distance
   t_finite_acting = time_finite_acting(re, rw, poro, mu_oil, ct, k)
