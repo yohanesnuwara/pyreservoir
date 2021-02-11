@@ -318,7 +318,7 @@ def constant_terminal_rate(time, distance, re, rw, pi, q, poro, ct, k, h, mu_oil
   Ei_table = Ei_table = np.loadtxt("https://raw.githubusercontent.com/yohanesnuwara/reservoir-engineering/master/Appendix%20A.%20Values%20and%20Tabulations/Table%20A-1-Values%20for%20Exponential%20Integral.txt") 
 
   r = rw + distance
-  t_finite_acting = time_finite_acting(re, rw, poro, mu_oil, ct, k)
+  t_finite_acting = time_finite_acting(k, poro, mu_oil, ct, rw, re)
 
   if time > 0 and time < t_finite_acting:
     """Time behaving infinite acting"""
