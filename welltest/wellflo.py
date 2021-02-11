@@ -322,7 +322,7 @@ def constant_terminal_rate(time, distance, re, rw, pi, q, poro, ct, k, h, mu_oil
 
   if time > 0 and time < t_finite_acting:
     """Time behaving infinite acting"""
-    td = dimensionless_time(time, rw, poro, mu_oil, ct, k)
+    td = time_dimensionless(time, rw, poro, mu_oil, ct, k)
     if r==rw:
       # Your distance is at the wellbore
       if td > 100:
@@ -336,7 +336,7 @@ def constant_terminal_rate(time, distance, re, rw, pi, q, poro, ct, k, h, mu_oil
 
     if r>rw:
       # Your distance is away from the wellbore, in the reservoir
-      td = dimensionless_time(time, r, poro, mu_oil, ct, k)
+      td = time_dimensionless(time, r, poro, mu_oil, ct, k)
       if td > 12.5:
         # pd can be approximated using Eq 6.28
 
@@ -392,18 +392,18 @@ def constant_terminal_rate(time, distance, re, rw, pi, q, poro, ct, k, h, mu_oil
 
   elif time == 0:
     """Time at start of flow"""
-    td = dimensionless_time(time, rw, poro, mu_oil, ct, k)
+    td = time_dimensionless(time, rw, poro, mu_oil, ct, k)
     pd = np.nan
     pwf = pi
     
   elif time >= t_finite_acting:
     """Time behaving finite acting"""
-    td = dimensionless_time(time, rw, poro, mu_oil, ct, k)
+    td = time_dimensionless(time, rw, poro, mu_oil, ct, k)
     if r==rw:
       # Your distance is at wellbore
       if td > 25:
         # Calculate dimensionless radius at reservoir outer boundary (r=re)
-        r_eD = dimensionless_radius(re, rw)
+        r_eD = radius_dimensionless(re, rw)
         # Eq 6.19
         pd = (2 * td / (r_eD**2)) + np.log(r_eD) - 0.75 # Eq 6.19
         pwf = pi - ((pd * q * Bo * mu_oil) / (0.007082 * k * h))
