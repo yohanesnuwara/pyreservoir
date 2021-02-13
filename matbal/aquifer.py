@@ -100,7 +100,7 @@ class fetkovich():
         return We_fetkovich
 
 class veh():
-    def calculate_aquifer_constant(self, r_R, h, cf, cw, poro):
+    def calculate_aquifer_constant(self, r_R, h, cf, cw, poro, theta=360):
         """
         Calculate theoretical aquifer constant for VEH (assuming cylindrical reservoir)
 
@@ -110,7 +110,7 @@ class veh():
         import numpy as np
 
         ct = cf + cw  # total compressibility, in aquifer sw=1
-        theta = 360  # full circle cylindrical
+#         theta = 360  # full circle cylindrical
         B_star = 1.119 * poro * ct * h * (r_R ** 2) * (theta / 360)
 
         return B_star
