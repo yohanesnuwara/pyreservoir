@@ -17,7 +17,7 @@ Python utilities for reservoir engineering calculations
 * `volumetrics`: Computing OOIP and OGIP using volumetric trapezoidal, pyramidal, and Simpson's 1/3 rule ([`volumetrics`](https://github.com/yohanesnuwara/pyreservoir/blob/master/volumetrics/volumetrics.py))
 * `welltest`: Modeling well transient response from multirate or multiple pressure data ([`wellflo`](https://github.com/yohanesnuwara/pyreservoir/blob/master/welltest/wellflo.py)); Simple well-test analysis on pressure drawdown and build-up data
 * `matbal`: Computing aquifer influx into a reservoir using Schilthuis, van Everdingen-Hurst, and Fetkovich methods ([`aquifer`](https://github.com/yohanesnuwara/pyreservoir/blob/master/matbal/aquifer.py)); Material balance plots for OOIP and OGIP verification for gas and oil reservoirs ([`mbal`](https://github.com/yohanesnuwara/pyreservoir/blob/master/matbal/mbal.py)); Computing reservoir drive indices and producing energy plots ([`drives`](https://github.com/yohanesnuwara/pyreservoir/blob/master/matbal/drives.py))
-* `dca`: Computing decline-curve parameters from Arps; Stochastic approach to assess uncertainty of DCA parameters
+* `dca`: Computing decline curve parameters from Arps `arps_fit`; Stochastic (bootstrapping) method to obtain the uncertainty of DCA parameters, in a form of 95% confidence interval `arps_bootstrap`
 
 ## Tutorials
 
