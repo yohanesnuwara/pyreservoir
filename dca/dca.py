@@ -1,3 +1,10 @@
+def hyperbolic(t, qi, di, b):
+  """
+  Hyperbolic decline function
+  """
+  import numpy as np
+  return qi / (np.abs((1 + b * di * t))**(1/b))
+
 def arps_fit(t, q):
   """
   Arps Decline Curve Analysis using Non-Linear Curve-Fitting
@@ -14,8 +21,8 @@ def arps_fit(t, q):
   import datetime
   from scipy.optimize import curve_fit
 
-  def hyperbolic(t, qi, di, b):
-    return qi / (np.abs((1 + b * di * t))**(1/b))
+#   def hyperbolic(t, qi, di, b):
+#     return qi / (np.abs((1 + b * di * t))**(1/b))
   
   def rmse(y, yfit):
     N = len(y)
@@ -73,3 +80,102 @@ def arps_fit(t, q):
   plt.show()
 
   return qi, di, b, RMSE
+
+def arps_bootstrap(t, q, size=1):
+    """
+    Bootstrapping of Decline Curves
+    """
+    import numpy as np
+    import datetime
+    from scipy.optimize import curve_fit
+
+    """ The exact copy of "arps_fit" function """
+#     def hyperbolic(t, qi, di, b):
+#       return qi / (np.abs((1 + b * di * t))**(1/b))
+    
+    def rmse(y, yfit):
+      N = len(y)
+      return np.sqrt(np.sum(y-yfit)**2 / N)
+
+    # subtract one datetime to another datetime
+    date = t
+    timedelta = [j-i for i, j in zip(t[:-1], t[1:])]
+    timedelta = np.array(timedelta)
+    timedelta = timedelta / datetime.timedelta(days=1)
+
+    # take cumulative sum over timedeltas
+    t = np.cumsum(timedelta)
+    t = np.append(0, t)
+    t = t.astype(float)
+
+    # normalize the time and rate data
+    t_normalized = t / max(t)
+    q_normalized = q / max(q)      
+
+    # Set up array of indices to sample from: inds
+    inds = np.arange(0, len(t_normalized))
+
+    # Initialize replicates for qi, di, b
+    bs_qi_reps = np.empty(size)
+    bs_di_reps = np.empty(size)
+    bs_b_reps = np.empty(size)   
+
+    plt.figure(figsize=(10,7)) 
+
+    # Generate replicates
+    for i in range(size):
+        bs_inds = np.random.choice(inds, size=len(inds))
+        bs_x, bs_y = t_normalized[bs_inds], q_normalized[bs_inds]
+        popt, pcov = curve_fit(hyperbolic, bs_x, bs_y)
+
+        # qi, di, and b replicates
+        bs_qi_reps[i], bs_di_reps[i], bs_b_reps[i] = popt
+
+        # Denormalize replicates
+        bs_qi_reps[i] = bs_qi_reps[i] * max(q)
+        bs_di_reps[i] = bs_di_reps[i] / max(t)
+    
+        # Produce the hyperbolic curve (fitted)
+        tfit = np.linspace(min(t), max(t), 100)
+        qfit_reps = hyperbolic(tfit, bs_qi_reps[i], bs_di_reps[i], bs_b_reps[i])
+
+        # Plot hyperbolic curve replicates
+        plt.plot(tfit, qfit_reps, color='orange', alpha=0.3)
+
+    # Calculate 95% CI
+    ci95_qi = np.percentile(bs_qi_reps, [2.5, 97.5])
+    ci95_di = np.percentile(bs_di_reps, [2.5, 97.5])
+    ci95_b = np.percentile(bs_b_reps, [2.5, 97.5])
+
+    min_qi, max_qi = ci95_qi
+    min_di, max_di = ci95_di
+    min_b, max_b = ci95_b
+
+    print("95% CI of initial production rate (qi) : {:.5f} to {:.5f} SCF/D".format(min_qi, max_qi))
+    print("95% CI of initial decline rate (di)    : {:.5f} to {:.5f} SCF/D".format(min_di, max_di))
+    print("95% CI of decline exponent (b)         : {:.5f} to {:.5f}".format(min_b, max_b))
+
+    ## Production rate using min CI
+    # qfit_min_ci = hyperbolic(tfit, min_qi, min_di, min_b) 
+    # qfit_max_ci = hyperbolic(tfit, max_qi, max_di, max_b) 
+
+    # The exact DCA
+    qi, di, b, RMSE = arps_fit(date, q)
+    qfit = hyperbolic(tfit, qi, di, b)    
+
+    plt.plot(tfit, qfit_reps, color='orange', alpha=0.3, label="Replicates")
+    # plt.plot(tfit, qfit_min_ci, "--", color='purple', label="Minimum 95% CI")
+    # plt.plot(tfit, qfit_max_ci, "--", color='purple', label="Minimum 95% CI")
+    plt.plot(tfit, qfit, color="red", label="Hyperbolic Curve")
+    plt.step(t, q, color='blue', label="Data")
+    plt.title('Decline Curve Analysis', size=20, pad=15)
+    plt.xlabel('Days')
+    plt.ylabel('Rate (SCF/d)')
+    plt.xlim(min(t), max(t))
+    plt.ylim(0, max(q))
+
+    plt.legend()
+    plt.grid()
+    plt.show()
+
+    return ci95_qi, ci95_di, ci95_b
