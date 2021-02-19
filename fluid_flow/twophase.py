@@ -4,7 +4,6 @@ def buckley_leverett1d(nt, Sw0, L, nx, sigma, bc_value, muw, muo, q, A, poro, Sw
     """
     import numpy
     import matplotlib.pyplot as pyplot
-    from relperm import interpolate_relperm
 
     def interstitial_velocity(q, A, poro):
         # interstitial velocity vt
@@ -46,7 +45,7 @@ def buckley_leverett1d(nt, Sw0, L, nx, sigma, bc_value, muw, muo, q, A, poro, Sw
         Sw_hist.append(Sw.copy()) 
 
     # Plot Sw over x
-    fig = pyplot.figure(figsize=(6.0, 4.0))
+    # fig = pyplot.figure(figsize=(6.0, 4.0))
     pyplot.xlabel(r'$x$')
     pyplot.ylabel(r'Sw')
     pyplot.grid()
@@ -55,7 +54,6 @@ def buckley_leverett1d(nt, Sw0, L, nx, sigma, bc_value, muw, muo, q, A, poro, Sw
     pyplot.plot(x, Sw, label='nt = {}'.format(nt),
                 color='C1', linestyle='-', linewidth=2)
     pyplot.xlim(0.0, L)
-    pyplot.ylim(0, 1)
-    fig.tight_layout()  
+    pyplot.ylim(0, 1)  
     pyplot.legend()
     pyplot.grid()
