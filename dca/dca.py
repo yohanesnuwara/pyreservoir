@@ -5,7 +5,7 @@ def hyperbolic(t, qi, di, b):
   import numpy as np
   return qi / (np.abs((1 + b * di * t))**(1/b))
 
-def arps_fit(t, q, maxfev=800, plot=None):
+def arps_fit(t, q, plot=None):
   """
   Arps Decline Curve Analysis using Non-Linear Curve-Fitting
   
@@ -45,7 +45,7 @@ def arps_fit(t, q, maxfev=800, plot=None):
   q_normalized = q / max(q)  
 
   # fitting the data with the hyperbolic function
-  popt, pcov = curve_fit(hyperbolic, t_normalized, q_normalized, maxfev=maxfev)
+  popt, pcov = curve_fit(hyperbolic, t_normalized, q_normalized)
   qi, di, b = popt
 
   # RMSE is calculated on the normalized variables
