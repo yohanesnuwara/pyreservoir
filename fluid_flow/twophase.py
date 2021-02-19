@@ -32,9 +32,7 @@ def buckley_leverett1d(nt, Sw0, L, nx, sigma, bc_value, muw, muo, q, A, poro, Sw
     Sw = Sw0.copy()
     for n in range(nt):
         # Compute the fractional flow.
-        krw, kro = interpolate_kr(Sw_data, krw_data, kro_data, Sw)
-        # krw = interpolate.splev(Sw, krw_interp, der=0) # interpolate krw for updated Sw
-        # kro = interpolate.splev(Sw, kro_interp, der=0) # interpolate kro for updated Sw
+        krw, kro = interpolate_relperm(Sw_data, krw_data, kro_data, Sw)
         Fw = fractional_flow(krw, muw, kro, muo)
         
         # Advance in time.
