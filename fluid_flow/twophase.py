@@ -4,6 +4,7 @@ def buckley_leverett1d(nt, Sw0, L, nx, sigma, bc_value, muw, muo, q, A, poro, Sw
     """
     import numpy
     import matplotlib.pyplot as pyplot
+    from relperm import interpolate_relperm
 
     def interstitial_velocity(q, A, poro):
         # interstitial velocity vt
