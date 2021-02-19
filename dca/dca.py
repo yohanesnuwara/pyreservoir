@@ -20,6 +20,7 @@ def arps_fit(t, q, maxfev=800, plot=None):
   import numpy as np
   import datetime
   from scipy.optimize import curve_fit
+  import matplotlib.pyplot as plt
 
   def hyperbolic(t, qi, di, b):
     return qi / (np.abs((1 + b * di * t))**(1/b))
@@ -89,6 +90,7 @@ def arps_bootstrap(t, q, size=1):
     import numpy as np
     import datetime
     from scipy.optimize import curve_fit
+    import matplotlib.pyplot as plt
 
     """ The exact copy of "arps_fit" function """
 #     def hyperbolic(t, qi, di, b):
