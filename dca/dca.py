@@ -182,3 +182,45 @@ def arps_bootstrap(t, q, size=1):
     plt.show()
 
     return ci95_qi, ci95_di, ci95_b
+
+def remove_outlier(df, column_name, window, number_of_stdevs_away_from_mean, trim=False):
+  """
+  Removing outlier of production data and trim initial buildup
+
+  INPUT:
+
+  df: Production dataframe
+  column_name: Column name of production rate
+  window: Rolling average window
+  number_of_stdevs_away_from_mean: Distance from standard dev. where outliers
+                                   will be removed
+  trim: Option to trim initial buildup (Because buildup is an outlier). 
+        Default is False.
+
+  OUTPUT:
+
+  df: New dataframe where outliers have been removed 
+  """
+  import pandas as pd
+
+  df[column_name+'_rol_Av']=df[column_name].rolling(window=window, center=True).mean()
+  df[column_name+'_rol_Std']=df[column_name].rolling(window=window, center=True).std()
+
+  # Detect anomalies by determining how far away from the mean (in terms of standard deviation)
+  df[column_name+'_is_Outlier']=(abs(df[column_name]-df[
+                              column_name+'_rol_Av'])>(
+                              number_of_stdevs_away_from_mean*df[
+                              column_name+'_rol_Std']))
+  
+  # outlier and not-outlier will be recorded in the '_is_Outlier'
+  # column as 'True' and 'False'. Now, outlier is removed, so column that
+  # contains 'True' values are masked out
+  result = df.drop(df[df[column_name+'_is_Outlier'] == True].index).reset_index(drop=True)
+
+  if trim==True:
+    # Trim initial buildup
+    maxi = result[column_name+'_rol_Av'].max()
+    maxi_index = (result[result[column_name+'_rol_Av']==maxi].index.values)[0]
+    result = result.iloc[maxi_index:,:].reset_index(drop=True)
+
+  return result  
