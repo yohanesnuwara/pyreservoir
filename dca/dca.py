@@ -230,6 +230,7 @@ def convert_date_to_days(t):
   Convert Numpy Datetime to Days 
   """
   import datetime
+  import numpy as np
   
   # subtract one datetime to another datetime
   timedelta = [j-i for i, j in zip(t[:-1], t[1:])]
