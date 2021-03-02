@@ -58,8 +58,8 @@ def arps_fit(t, q, plot=None):
 
   if plot==True:
     # Print all parameters and RMSE
-    print('Initial production rate (qi)  : {:.5f} SCF'.format(qi))
-    print('Initial decline rate (di)     : {:.5f} SCF/D'.format(di))
+    print('Initial production rate (qi)  : {:.5f} VOL/D'.format(qi))
+    print('Initial decline rate (di)     : {:.5f} VOL/D'.format(di))
     print('Decline coefficient (b)       : {:.5f}'.format(b))
     print('RMSE of regression            : {:.5f}'.format(RMSE))  
 
@@ -154,8 +154,8 @@ def arps_bootstrap(t, q, size=1):
     min_di, max_di = ci95_di
     min_b, max_b = ci95_b
 
-    print("95% CI of initial production rate (qi) : {:.5f} to {:.5f} SCF/D".format(min_qi, max_qi))
-    print("95% CI of initial decline rate (di)    : {:.5f} to {:.5f} SCF/D".format(min_di, max_di))
+    print("95% CI of initial production rate (qi) : {:.5f} to {:.5f} VOL/D".format(min_qi, max_qi))
+    print("95% CI of initial decline rate (di)    : {:.5f} to {:.5f} VOL/D".format(min_di, max_di))
     print("95% CI of decline exponent (b)         : {:.5f} to {:.5f}".format(min_b, max_b))
 
     ## Production rate using min CI
