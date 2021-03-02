@@ -224,3 +224,20 @@ def remove_outlier(df, column_name, window, number_of_stdevs_away_from_mean, tri
     result = result.iloc[maxi_index:,:].reset_index(drop=True)
 
   return result  
+
+def convert_date_to_days(t):
+  """
+  Convert Numpy Datetime to Days 
+  """
+  import datetime
+  
+  # subtract one datetime to another datetime
+  timedelta = [j-i for i, j in zip(t[:-1], t[1:])]
+  timedelta = np.array(timedelta)
+  timedelta = timedelta / datetime.timedelta(days=1)
+
+  # take cumulative sum over timedeltas
+  t = np.cumsum(timedelta)
+  t = np.append(0, t)
+  t = t.astype(float)
+  return t
