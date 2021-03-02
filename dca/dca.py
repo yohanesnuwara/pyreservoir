@@ -217,6 +217,9 @@ def remove_outlier(df, column_name, window, number_of_stdevs_away_from_mean, tri
   # contains 'True' values are masked out
   result = df.drop(df[df[column_name+'_is_Outlier'] == True].index).reset_index(drop=True)
 
+  # Remove rows where "_rol_Av" has NaNs
+  result = result[result[column_name+'_rol_Av'].notna()]  
+
   if trim==True:
     # Trim initial buildup
     maxi = result[column_name+'_rol_Av'].max()
