@@ -147,6 +147,42 @@ def gas_compressibility(T_pr, P_pr, rho_pr, z, P_pc):
   cgas_analytical = c_pr_analytical / P_pc
   return(cgas_analytical)           
 
+def calculate_gas_properties(temp, pressure, sg, x_h2s, x_co2):
+    P_pc, T_pc, P_pr, T_pr = gas_pseudoprops(temp, pressure, sg, x_h2s, x_co2)
+
+    # Z- factor, unitless
+    rho_pr, z_factor = gas_zfactor(T_pr, P_pr)
+
+    # density, lb/ft3
+    rhogas = gas_density(temp, pressure, sg, z_factor)
+
+    # gas FVF (res ft3/scf)
+    Bg = gas_fvf(z_factor, temp, pressure)
+
+    # gas compressibility (1/psi or sip)
+    cgas = gas_compressibility(T_pr, P_pr, rho_pr, z_factor, P_pc)
+    cgas = cgas * 1e+6 # convert to micro-sip
+
+    # viscosity (cp, centipoise)
+    viscogas = gas_mu(temp, rhogas, sg)
+
+    print('=== Gas PVT Correlation Calculator === \n')
+    print('Your Input:')
+    print('Pressure                   : {} psia'.format(pressure))
+    print('Temperature                : {} °F'.format(temp))
+    print('Specific Gravity           : {}'.format(sg))
+    print('H2S Mole Fraction          : {}'.format(x_h2s))
+    print('CO2 Mole Fraction          : {} \n'.format(x_co2))
+
+    print('PVT Output:')
+    print('z-factor                   : {}'.format(z_factor))
+    print('Density                    : {} lb/ft3'.format(rhogas))
+    print('FVF                        : {} res ft3/scf'.format(Bg))
+    print('Isothermal compressibility : {} microsip'.format(cgas * 1E+6))
+    print('Viscosity                  : {} cp'.format(viscogas))  
+
+    return z_factor, rhogas, Bg, cgas, viscogas
+
 """
 OIL
 """
@@ -360,6 +396,23 @@ def gasoilratio(pressure2, P_bubble, sg2, api, temp2, Rsb):
     Rs = np.nan
     
   return Rs
+
+def calculate_oil_properties(pressure, temp, sg, Rsb, api):
+    pbubble = oil_pbubble(Rsb, sg, api, temp)
+
+    # oil compress, sip
+    coil = oil_compressibility(pressure, pbubble, temp, api, Rsb, sg)
+
+    # FVF (RB/STB)
+    Bo = oil_fvf(pbubble, api, Rsb, sg, temp, pressure)
+
+    # GOR
+    Rs = gasoilratio(pressure, pbubble, sg, api, temp, Rsb)
+
+    # visco, cp
+    viscooil = oil_mu(pressure, pbubble, sg, api, temp, Rs)
+
+    return pbubble, coil, Bo, Rs, viscooil
 
 """
 WATER
